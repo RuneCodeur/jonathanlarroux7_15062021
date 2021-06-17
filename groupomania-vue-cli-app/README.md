@@ -23,8 +23,13 @@ liste message
 	message			TEXT
 	media			TEXT
 	date			DATETIME NOT NULL
-	thread			SMALLINT NOT NULL
+	parent-message		SMALLINT NOT NULL
 liste thread
+	id 			SMALLINT NOT NULL AUTO_INCREMENT DEFAULT 0 
+	nom-thread		TINYTEXT NOT NULL
+	position-canal		SMALLINT NOT NULL UNSIGNED
+	id-utilisateur		SMALLINT
+list canaux
 	id 			SMALLINT NOT NULL AUTO_INCREMENT DEFAULT 0 
 	nom-canal		TINYTEXT NOT NULL
 	position-canal		SMALLINT NOT NULL UNSIGNED
@@ -47,4 +52,4 @@ création sommaire de la BDD
 connexion entre le back la BDD
 connexion entre le front et le back
 integration de GIPHY
-ajustement de la BDD
+ajustement de la BDD et back
