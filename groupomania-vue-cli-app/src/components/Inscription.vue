@@ -1,13 +1,16 @@
 <template>
   <div class="inscription">
+    
     <nav class="navbar-brand m-0 text-center">
       <router-link to="/" class="mx-3">connexion</router-link>
       <router-link to="/inscription" class="mx-3">inscription</router-link>
     </nav>
-    <form class="card" method="post">
+
+    <form class="d-flex container flex-column" method="post">
       <fieldset class="text-center">
 
         <legend>inscription</legend>
+
         <div class="my-2">
           <label for="pseudo" class="col-3 col-md-2" >pseudo: </label><input type="text" name="pseudo">
         </div>
