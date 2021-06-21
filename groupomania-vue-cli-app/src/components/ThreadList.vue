@@ -18,7 +18,10 @@
         <router-link to="/sujet/123" class="text-decoration-none text-dark d-flex row col-12">
           <div class="col-7 border">que pensez vous des saucisses de francfort ???</div>
           <div class="col-4 border"> jean eude pascal</div>
-          <input type="button" value="X" class="btn-danger col-1 p-0">
+          <div class="col-1 d-flex flex-column p-0 fs-6 justify-content-around">
+            <i class="fas fa-cog btn-warning py-2"></i>
+            <i class="fas fa-trash-alt btn-danger py-2"></i>
+          </div>
       </router-link>
       </div>
 

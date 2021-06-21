@@ -18,10 +18,11 @@
             <div class="fw-bold fs-5">jean roger moure</div>
             <div class="row m-0"> 
               <div class="fst-italic p-0 col-8 border">le 12/03/2021 à 12h12</div>
-              <input type="button" value="modifier" class="col-4">
+            <i class="fas fa-cog btn-warning py-2 col-2 text-center"></i>
+            <i class="fas fa-trash-alt btn-danger py-2 col-2 text-center"></i>
             </div>
           </div>
-          <div class="mx-2 my-4">alors voila, moi j'aime bien les saucisses de francfort</div>
+          <div class="mx-2 my-4">alors voila, moi j'aime bien les saucisses de francfort <br> et vous ????</div>
         </div>
 
       </div>

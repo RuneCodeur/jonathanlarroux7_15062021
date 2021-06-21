@@ -9,7 +9,7 @@
     <form class="d-flex container flex-column" method="post">
       <fieldset class="text-center">
 
-        <legend>connexion</legend>
+        <h2>connexion</h2>
 
         <div class="my-2">
           <label for="mail" class="col-3 col-md-2">adresse mail: </label><input type="mail" name="mail">

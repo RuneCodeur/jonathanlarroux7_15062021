@@ -10,29 +10,34 @@ page d'inscription
 
 
 base de serveur SQL:
-compte
-	id			SMALLINT NOT NULL AUTO_INCREMENT DEFAULT 0 
- 	status			CHAR(5) NOT NULL
-	nom			TINYTEXT NOT NULL
-	adresse			TINYTEXT NOT NULL
-	mdp			TINYTEXT NOT NULL
-liste message
-	id			SMALLINT NOT NULL AUTO_INCREMENT DEFAULT 0 
-	id-utilisateur		SMALLINT
-	nom-utilisateur		TINYTEXT NOT NULL
-	message			TEXT
-	media			TEXT
-	date			DATETIME NOT NULL
-	parent-message		SMALLINT NOT NULL
-liste thread
-	id 			SMALLINT NOT NULL AUTO_INCREMENT DEFAULT 0 
-	nom-thread		TINYTEXT NOT NULL
-	position-canal		SMALLINT NOT NULL UNSIGNED
-	id-utilisateur		SMALLINT
-list canaux
-	id 			SMALLINT NOT NULL AUTO_INCREMENT DEFAULT 0 
-	nom-canal		TINYTEXT NOT NULL
-	position-canal		SMALLINT NOT NULL UNSIGNED
+users
+	id					SMALLINT NOT NULL AUTO_INCREMENT PRIMARY KEY
+ 	status				CHAR(5) NOT NULL
+	nom					TINYTEXT NOT NULL
+	mail				TINYTEXT NOT NULL
+	mdp					TINYTEXT NOT NULL
+list_messages
+	id					SMALLINT NOT NULL AUTO_INCREMENT PRIMARY KEY
+	id_user				SMALLINT
+	name_user			TINYTEXT NOT NULL
+	message				TEXT
+	media				TEXT
+	date				DATETIME NOT NULL
+	position_sujet		SMALLINT NOT NULL
+	position_canal		SMALLINT NOT NULL
+sujets
+	id 					SMALLINT NOT NULL AUTO_INCREMENT PRIMARY KEY 
+	nom-sujet			TINYTEXT NOT NULL
+	position-forum		SMALLINT NOT NULL UNSIGNED
+	creator				SMALLINT
+forums
+	id 					SMALLINT NOT NULL AUTO_INCREMENT PRIMARY KEY 
+	nom-canal			TINYTEXT NOT NULL
+
+
+
+
+
 
 comptes:
 status user :

@@ -17,7 +17,10 @@
           <router-link to="/thread" class="text-decoration-none text-white card col-10 p-2 bg-success">
           *faire des trucs le Week-end*
           </router-link>
-          <input type="button" value="X" class="col-2 btn-danger">
+          <div class="col-1 d-flex flex-column p-0 fs-6 justify-content-around">
+            <i class="fas fa-cog btn-warning py-2"></i>
+            <i class="fas fa-trash-alt btn-danger py-2"></i>
+          </div>
         </div>
         
         

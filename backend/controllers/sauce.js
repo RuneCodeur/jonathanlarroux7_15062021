@@ -1,7 +1,7 @@
 const Sauce = require ('../models/Sauce');
 const User = require ('../models/user');
 const fs = require('fs');
-let regex = new RegExp("^[A-Za-z-éèêëçàâùï€$£_'.;:,@?!()\n 0-9]+$"); //caractères acceptables
+let regex = new RegExp("^[A-Za-z-éèêëçàâùï€$£_'.;:,@?!()\n 0-9]+$");
 
 //crée un nouvel item sauce.
 exports.createSauce = (req, res) => {
@@ -24,8 +24,8 @@ exports.getOneSauce = (req, res) => {
 
 //renvoie tout les items sauce.
 exports.getAllSauces = (req, res) => {
-  Sauce.find()
-  .then(sauces => res.status(200).json(sauces))
+  console.log("c'est ok pour les sauces")
+  .then(res.status(200).json('sa marche bien'))
   .catch((error) => res.status(500).json({ error }));
 }
 
@@ -61,9 +61,7 @@ exports.modifySauce = (req, res) => {
 
   // si l'image n'est pas modifié
   }else if (req.file === undefined){
-    //test les caractères envoyés
     if((regex.test(req.body.name) == true) && (regex.test(req.body.manufacturer) == true) && (regex.test(req.body.description) == true) && (regex.test(req.body.mainPepper) == true)){ 
-      //la valeur heat doit être entre 1 et 10
       if((req.body.heat > 0) && (req.body.heat <= 10)){
         Sauce.updateOne({_id: req.params.id}, {...req.body, _id: req.params.id})
         .then(() => res.status(200).json({ message: 'Sauce modifiée !'}))
