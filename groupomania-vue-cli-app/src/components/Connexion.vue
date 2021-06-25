@@ -12,20 +12,49 @@
         <h2>connexion</h2>
 
         <div class="my-2">
-          <label for="mail" class="col-3 col-md-2">adresse mail: </label><input type="mail" name="mail">
+          <label for="mail" class="col-3 col-md-2">adresse mail: </label><input type="mail" name="mail" v-model="mail">
         </div>
         <div class="my-2">
-          <label for="password" class="col-3 col-md-2">mot de passe: </label><input type="password" name="password">
+          <label for="password" class="col-3 col-md-2">mot de passe: </label><input type="password" name="password" v-model="mdp">
         </div>
-        <input type="submit" value="je me connecte" class="my-4">
+        <div id="errorMsg" class="text-danger"></div>
+        <input type="button" value="je me connecte" class="my-4" @click="connection" id="connect-button">
 
       </fieldset>
     </form>
   </div>
 </template>
-
+ 
 <script>
-export default {
+import{HTTP} from '../http-constants'
+export default{
+  nape: "app",
+  data() {
+    return {
+      mail:'',
+      mdp:'',
+    }
+  },
+  methods: {
+    connection() {
+      let connectButton= document.getElementById('connect-button'); 
+      connectButton.disabled= true;
+
+      HTTP.get('/auth/login/', {
+        params:{
+          mail: this.mail,
+          mdp:this.mdp
+        }
+      })
+
+      .then(response =>{
+        console.log(response);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+    }
+  }
 }
 </script>
 

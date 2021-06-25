@@ -34,6 +34,8 @@ forums
 	id 					SMALLINT NOT NULL AUTO_INCREMENT PRIMARY KEY 
 	nom-canal			TINYTEXT NOT NULL
 
+comportement :
+1 dans list_msg, la valeur de name_user change quand l'utilisateur change aussi de nom, mais pas quand l'utilisateur supprime son compte
 
 
 
