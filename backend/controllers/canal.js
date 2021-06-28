@@ -6,7 +6,7 @@ const sequelize = new Sequelize("groupomania", "root", "oblivion",{
   host:"localhost"
 }); 
 
-//obtient la liste de tout les canaux --ok 
+//obtient la liste de tout les canaux -- ok 
 exports.getAllCanal= (req, res) => {
   sequelize.query("SELECT * FROM list_canal;")
   .then(response => res.status(200).json({response}))

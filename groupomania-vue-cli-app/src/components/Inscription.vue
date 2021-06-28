@@ -13,7 +13,7 @@
 
         <div class="my-2">
           <label for="pseudo" class="col-3 col-md-2" >pseudo: </label><input type="text" name="pseudo" id="pseudo" v-model="pseudo"> 
-        </div> 
+        </div>
         <div class="my-2">
           <label for="mail" class="col-3 col-md-2">adresse mail: </label><input type="mail" name="mail" id="mail" v-model="mail">
         </div>
@@ -30,23 +30,22 @@
 
 <script>
 import{HTTP} from '../http-constants'
+import {  mapGetters } from 'vuex'
+import { mapState } from 'vuex'	
 export default{
+  computed:{
+    ... mapState(['token','pseudoData', 'id', 'mailData', 'status']),
+    ... mapGetters(['NEW_USER'])
+  },
   nape: "app",
   data() {
     return {
       pseudo:'',
-      mail:'',
       mdp:'',
+      mail:''
     }
   },
-  //si je fait un GET--ok
-  /*beforeMount(){
-    axios
-    .get("http://localhost:3000/api/messages/")
-    .then(response =>(console.log(response)))
-    .catch(error => (console.error(error)))
-  },*/
-  //si je veux faire un POST--ok
+
   methods: {
     addTodo() {
       let inscriButton= document.getElementById('inscri-button'); 
@@ -58,11 +57,27 @@ export default{
         mdp: this.mdp
         }
 
-        console.log(formulaire)
       HTTP.post('/auth/signup/', formulaire)
 
-      .then(response =>{
-        console.log(response);
+      .then(() =>{
+        HTTP.get('/auth/login/', {
+        params:{
+          mail: this.mail,
+          mdp:this.mdp
+          }
+        })
+
+        .then(response =>{
+
+          //axios.defaults.headers.common = {'Authorization': `bearer ${token}`}
+          
+          this.$store.commit("NEW_USER", response.data.id, response.data.status, response.data.pseudo, response.data.mail, response.data.token)
+          this.$router.push('/forum')
+        })
+        .catch(error => {
+          document.getElementById('errorMsg').innerText = error;
+          inscriButton.disabled = false;
+        });
       })
       .catch(error => {
         document.getElementById('errorMsg').innerText = error;

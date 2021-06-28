@@ -5,6 +5,7 @@
       <router-link to="/news" class="mx-3">news</router-link>
       <router-link to="/forum" class="mx-3">forum</router-link>
       <router-link to="/myAccount" class="mx-3">mon profil</router-link>
+      <router-link to="/" class="mx-3">me deconnecter</router-link>
     </nav>
     
     <div class="d-flex container flex-column text-center">
@@ -23,8 +24,7 @@
           </div>
         </div>
         
-        
-
+          <div id="result">lol</div>
       </div>
       <div class="d-flex justify-content-center row mt-4" >
         <input type="button" class="m-1 col-6" value="ajouter un forum">
@@ -42,7 +42,34 @@
 </template>
 
 <script>
-export default {
+import{ HTTP } from '../http-constants'
+import {  mapGetters } from 'vuex'
+import { mapState } from 'vuex'
+export default{
+  computed:{
+    ... mapState(['token','pseudoData', 'id', 'mailData', 'status']),
+    ... mapGetters(['NEW_USER'])
+  },
+  nape: "app",
+  data() {
+    return {
+      pseudo:'',
+      mdp:'',
+      mail:''
+    }
+  },
+    mounted() {
+      HTTP.defaults.headers.common['Authorization'] = `bearer ${this.token}`;
+      let result = document.getElementById('result')
+      result.innerHTML= 'hello';
+      HTTP.get('/canal/welcome')
+      .then(e =>{
+        let response = e.data.response[0][0]
+        result.innerText= response.nom_canal
+        console.log(response)
+      })
+      
+  }
 }
 </script>
 

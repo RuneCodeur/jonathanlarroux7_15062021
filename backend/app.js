@@ -7,10 +7,12 @@ const sequelize = require('sequelize');
 
 const messagesRoutes = require('./routes/message');
 const userRoutes = require('./routes/user');
+const canalRoutes = require('./routes/canal');
+const sujetsRoutes = require('./routes/sujets');
 
 const limiter = rateLimit({
   windowMs: 60 * 1000, 
-  max: 20
+  max: 100
 });
 
 //connection
@@ -43,5 +45,7 @@ app.use('/images', express.static(path.join(__dirname, 'images')));
 //routes principale
 app.use('/api/messages', messagesRoutes);
 app.use('/api/auth', userRoutes);
+app.use('/api/canal', canalRoutes);
+app.use('/api/sujet', sujetsRoutes)
 
 module.exports = app;

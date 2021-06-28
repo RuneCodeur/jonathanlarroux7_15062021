@@ -31,6 +31,7 @@
 </template>
 
 <script>
+//declarer un truc qui dit que, si j'ai pas de token, tu redirige le bazar
 </script>
 
 <style lang="scss">

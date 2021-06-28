@@ -24,21 +24,28 @@
     </form>
   </div>
 </template>
- 
+
 <script>
 import{HTTP} from '../http-constants'
+import {  mapGetters } from 'vuex'
+import { mapState } from 'vuex'
 export default{
+  computed:{
+    ... mapState(['token','pseudoData', 'id', 'mailData', 'status']),
+    ... mapGetters(['NEW_USER'])
+  },
   nape: "app",
   data() {
     return {
-      mail:'',
+      pseudo:'',
       mdp:'',
+      mail:'',
     }
   },
   methods: {
     connection() {
-      let connectButton= document.getElementById('connect-button'); 
-      connectButton.disabled= true;
+      let connectButton = document.getElementById('connect-button');
+      connectButton.disabled = true;
 
       HTTP.get('/auth/login/', {
         params:{
@@ -48,10 +55,12 @@ export default{
       })
 
       .then(response =>{
-        console.log(response);
+        this.$store.commit("NEW_USER", response.data)
+        this.$router.push('/forum')
       })
       .catch(error => {
-        console.log(error);
+        document.getElementById('errorMsg').innerText = error;
+        connectButton.disabled = false;
       });
     }
   }
