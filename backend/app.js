@@ -3,7 +3,7 @@ const bodyParser = require('body-parser');
 const path = require('path');
 const helmet = require('helmet');
 const rateLimit = require("express-rate-limit");
-const sequelize = require('sequelize');
+const connect = require('./connect');
 
 const messagesRoutes = require('./routes/message');
 const userRoutes = require('./routes/user');
@@ -16,10 +16,6 @@ const limiter = rateLimit({
 });
 
 //connection
-const connect = new sequelize("groupomania", "root", "oblivion",{
-  dialect: "mysql",
-  host:"localhost"
-})
 try {
   connect.authenticate();
   console.log('Connecté à la base de données MySQL!');
@@ -46,6 +42,6 @@ app.use('/images', express.static(path.join(__dirname, 'images')));
 app.use('/api/messages', messagesRoutes);
 app.use('/api/auth', userRoutes);
 app.use('/api/canal', canalRoutes);
-app.use('/api/sujet', sujetsRoutes)
+app.use('/api/sujet', sujetsRoutes);
 
 module.exports = app;

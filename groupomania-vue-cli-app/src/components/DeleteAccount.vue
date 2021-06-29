@@ -9,15 +9,40 @@
     </nav>
     <h2>suppression du compte</h2>
     <div class="d-flex container flex-column alert alert-warning fs-4">
-      Attention : la suppression du compte est irréversible !
+      Attention : la suppression du compte <div class="mx-2 fw-bold fs-2">{{$store.state.pseudoStore}}</div> est irréversible !
     </div>
-    <input type="button" value="je supprime mon compte" class="my-4 fs-4 btn-danger p-2">
-    
+    <input type="button" value="je supprime mon compte" class="my-4 fs-4 btn-danger p-2" @click="deleteAccount">
   </div>
 </template>
 
 <script>
-export default {
+import{HTTP} from '../http-constants'
+import {  mapGetters } from 'vuex'
+import { mapState } from 'vuex'	
+export default { 
+  computed:{... mapState(['tokenStore','pseudoStore', 'idStore', 'mailStore']),
+    ... mapGetters(['DISCONNECT_USER'])
+  },
+  nape: "app",
+  methods: {
+    deleteAccount(){
+      HTTP.defaults.headers.common['Authorization'] = `bearer ${this.tokenStore}`;
+      HTTP.delete('auth/delete', {
+        params:{
+          mail: this.mailStore,
+          id: this.idStore,
+          pseudo: this.pseudoStore,
+        }
+      })
+      .then(() =>{
+        this.$store.commit('DISCONNECT_USER');
+        this.$router.push('/');
+      })
+      .catch(error =>{
+        console.log(error);
+      })
+    }
+  }
 }
 </script>
 

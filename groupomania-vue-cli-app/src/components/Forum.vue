@@ -47,7 +47,7 @@ import {  mapGetters } from 'vuex'
 import { mapState } from 'vuex'
 export default{
   computed:{
-    ... mapState(['token','pseudoData', 'id', 'mailData', 'status']),
+    ... mapState(['tokenStore','pseudoStore', 'idStore', 'mailStore', 'statusStore']),
     ... mapGetters(['NEW_USER'])
   },
   nape: "app",
@@ -59,14 +59,13 @@ export default{
     }
   },
     mounted() {
-      HTTP.defaults.headers.common['Authorization'] = `bearer ${this.token}`;
+      HTTP.defaults.headers.common['Authorization'] = `bearer ${this.tokenStore}`;
       let result = document.getElementById('result')
       result.innerHTML= 'hello';
       HTTP.get('/canal/welcome')
       .then(e =>{
         let response = e.data.response[0][0]
         result.innerText= response.nom_canal
-        console.log(response)
       })
       
   }

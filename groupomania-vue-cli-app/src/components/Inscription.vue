@@ -34,7 +34,7 @@ import {  mapGetters } from 'vuex'
 import { mapState } from 'vuex'	
 export default{
   computed:{
-    ... mapState(['token','pseudoData', 'id', 'mailData', 'status']),
+    ... mapState(['tokenStore','pseudoStore', 'idStore', 'mailStore', 'statusStore']),
     ... mapGetters(['NEW_USER'])
   },
   nape: "app",
@@ -68,10 +68,7 @@ export default{
         })
 
         .then(response =>{
-
-          //axios.defaults.headers.common = {'Authorization': `bearer ${token}`}
-          
-          this.$store.commit("NEW_USER", response.data.id, response.data.status, response.data.pseudo, response.data.mail, response.data.token)
+          this.$store.commit("NEW_USER", response.data)
           this.$router.push('/forum')
         })
         .catch(error => {
