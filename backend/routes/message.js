@@ -10,4 +10,5 @@ router.post('/:idCanal/:idSujet/create', auth, multer, msgCtrl.createMsg); // ok
 router.get('/New', auth, msgCtrl.getNewMsg); // ok ?
 router.put('/:idCanal/:idSujet/:idMsg', auth, multer, msgCtrl.modifyMyMsg); // ok ?
 router.delete('/:idCanal/:idSujet/:idMsg', auth, msgCtrl.deleteMyMsg); // ok ?
+
 module.exports = router;

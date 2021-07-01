@@ -1,7 +1,7 @@
 <template>
   <div class="myAccount">
     
-    <nav class="navbar-brand m-0 text-center">
+    <nav class="navbar-brand m-0 text-center fs-6 d-flex flex-wrap justify-content-center border">
       <router-link to="/news" class="mx-3">news</router-link>
       <router-link to="/forum" class="mx-3">forum</router-link>
       <router-link to="/myAccount" class="mx-3">mon profil</router-link>
@@ -59,7 +59,7 @@ export default {
       })
       .then(() =>{
         this.$store.commit('CHANGE_PSEUDO',this.newPseudo);
-        this.$router.push('/myAccount');
+        this.$router.push('/forum');
       })
       .catch(error =>{
         console.log(error);

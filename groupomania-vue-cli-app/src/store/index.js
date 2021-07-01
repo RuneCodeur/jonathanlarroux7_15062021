@@ -8,7 +8,9 @@ export default createStore({
     mailStore:'',
     statusStore:'',
     idCanalStore:'',
+    nameCanalStore:'',
     idSujetStore:'',
+    nameSujetStore:'',
   },
   mutations: {
     NEW_USER(state, response){
@@ -31,10 +33,12 @@ export default createStore({
       state.idSujetStore = '';
     },
     SELECT_CANAL(state, response){
-      state.idCanalStore = response.idCanal
+      state.idCanalStore = response[0]
+      state.nameCanalStore = response[1]
     },
     SELECT_SUJET(state, response){
-      state.idSujetStore = response.idSujet
+      state.idSujetStore = response[0]
+      state.nameSujetStore = response[1]
     },
   },
   actions: {

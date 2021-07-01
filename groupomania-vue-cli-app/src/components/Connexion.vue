@@ -1,7 +1,7 @@
 <template>
   <div class="connexion">
     
-    <nav class="navbar-brand m-0 text-center">
+    <nav class="navbar-brand m-0 text-center fs-6 d-flex flex-wrap justify-content-center border">
       <router-link to="/" class="mx-3">connexion</router-link>
       <router-link to="/inscription" class="mx-3">inscription</router-link>
     </nav>

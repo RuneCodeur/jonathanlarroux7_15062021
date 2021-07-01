@@ -23,7 +23,6 @@ exports.signup = (req, res) => {
 
 //connecte un utilisateur à son compte. -- ok
 exports.login = (req, res) => {
-  console.log(req.query)
   if ((regex.test(req.query.mdp) === true) && (mailRegex.test(req.query.mail) === true)){
     connect.query("SELECT * FROM users WHERE mail='" + req.query.mail + "' LIMIT 1;")
     .then(e => {

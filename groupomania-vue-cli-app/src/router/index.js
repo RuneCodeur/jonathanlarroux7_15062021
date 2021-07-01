@@ -33,19 +33,19 @@ const routes = [
     component: () => import('../components/DeleteAccount'),
   },
   {
-    path: '/thread',
-    name: 'Threadlist',
-    component: () => import('../components/ThreadList'),
+    path: '/sujet/:idCanal',
+    name: 'SujetList',
+    component: () => import('../components/SujetList'),
   },
   {
-    path: '/sujet/123',
-    name: 'Thread',
-    component: () => import('../components/Thread'),
+    path: '/sujet/:idCanal/:idSujet',
+    name: 'Sujet',
+    component: () => import('../components/Sujet'),
   },
   {
-    path: '/sujet/new',
-    name: 'newSujet',
-    component: () => import('../components/NewSujet'),
+    path: '/sujet/:idCanal/create',
+    name: 'SujetCreate',
+    component: () => import('../components/SujetCreate'),
   },
 ]
 

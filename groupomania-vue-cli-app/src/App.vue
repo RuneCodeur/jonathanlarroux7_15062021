@@ -8,11 +8,11 @@
       <router-link to="/forum" class="mx-3">forum</router-link>
       <router-link to="/myAccount" class="mx-3">mon profil</router-link>
       <router-link to="/myAccount/delete" class="mx-3">suppression compte</router-link>
-      <router-link to="/thread" class="mx-3">liste sujets</router-link>
-      <router-link to="/sujet/123" class="mx-3">le thread</router-link>
+      <router-link to="/sujet/:id" class="mx-3">liste sujets</router-link>
+      <router-link to="/sujet/:idCanal/:idSujet" class="mx-3">le sujet</router-link>
       <router-link to="/" class="mx-3">connexion</router-link>
       <router-link to="/inscription" class="mx-3">inscription</router-link>
-      <router-link to="/sujet/new" class="mx-3">nouveau sujet</router-link>
+      <router-link to="/sujet/create" class="mx-3">nouveau sujet</router-link>
     </nav>
 
     </header>

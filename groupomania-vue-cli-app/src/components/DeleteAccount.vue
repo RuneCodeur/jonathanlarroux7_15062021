@@ -1,12 +1,13 @@
 <template>
   <div class="delete text-center">
 
-    <nav class="navbar-brand m-0 text-center">
+    <nav class="navbar-brand m-0 text-center fs-6 d-flex flex-wrap justify-content-center border">
       <router-link to="/news" class="mx-3">news</router-link>
       <router-link to="/forum" class="mx-3">forum</router-link>
       <router-link to="/myAccount" class="mx-3">mon profil</router-link>
       <router-link to="/" class="mx-3">me deconnecter</router-link>
     </nav>
+    
     <h2>suppression du compte</h2>
     <div class="d-flex container flex-column alert alert-warning fs-4">
       Attention : la suppression du compte <div class="mx-2 fw-bold fs-2">{{$store.state.pseudoStore}}</div> est irréversible !

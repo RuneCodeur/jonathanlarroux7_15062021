@@ -1,7 +1,7 @@
 <template>
   <div class="forum">
 
-    <nav class="navbar-brand m-0 text-center">
+    <nav class="navbar-brand m-0 text-center fs-6 d-flex flex-wrap justify-content-center border">
       <router-link to="/news" class="mx-3">news</router-link>
       <router-link to="/forum" class="mx-3">forum</router-link>
       <router-link to="/myAccount" class="mx-3">mon profil</router-link>
@@ -12,30 +12,38 @@
 
       <h2>forum</h2>
       
-      <div class="d-flex align-items-center flex-column">
+      <div class="d-flex align-items-center flex-column" id="listForum">
 
-        <div class="fs-3 my-2 row col-12">
-          <router-link to="/thread" class="text-decoration-none text-white card col-10 p-2 bg-success">
-          *faire des trucs le Week-end*
-          </router-link>
+        <div class="fs-3 my-2 row col-12" v-for="canal in listCanal" :key="canal.id">
+          <div class="col-1"></div>
+          <div @click="goToCanal(canal.id, canal.nom_canal)" class="text-decoration-none text-white card col-10 p-2 bg-success fs-5">
+          {{canal.nom_canal}}
+          </div>
           <div class="col-1 d-flex flex-column p-0 fs-6 justify-content-around">
-            <i class="fas fa-cog btn-warning py-2"></i>
-            <i class="fas fa-trash-alt btn-danger py-2"></i>
+            <i class="fas fa-cog btn-warning py-2" v-show="showModif" @click="showChangeNameCanal = !showChangeNameCanal"></i>
+            <i class="fas fa-trash-alt btn-danger py-2" v-show="showModif" @click="destroyCanal"></i>
           </div>
         </div>
-        
-          <div id="result">lol</div>
+
       </div>
       <div class="d-flex justify-content-center row mt-4" >
-        <input type="button" class="m-1 col-6" value="ajouter un forum">
-      <form class="d-flex justify-content-center row my-4" method="post">
-        <fieldset class="text-center">
+        <input type="button" class="m-1 col-6" value="ajouter un forum" @click="showAddForum = !showAddForum" v-show="showAddForum - showModif">
+      <form class="d-flex justify-content-center row " method="post">
+
+        <fieldset class="text-center my-4" v-show="!showAddForum">
            <label for="title" class=""> titre du forum: </label>
-          <input type="text" name="title" placeholder="titre du forum" class="m-2 col-6">
+          <input type="text" name="title" placeholder="titre du forum" class="m-2 col-6" v-model="canalName">
+          <input type="button" value="ajouter" class="col-3" @click="newForum" >
         </fieldset>
-        <input type="button" value="ajouter" class="col-3" >
+
+        <fieldset class="text-center my-4" v-show="showChangeNameCanal">
+           <label for="title" class=""> nouveau nom du forum: </label>
+          <input type="text" name="title" placeholder="titre du forum" class="m-2 col-6" v-model="canalName">
+          <input type="button" value="modifier" class="col-3" @click="modifForum" >
+
+        </fieldset>
       </form>
-      <input type="button" class="m-1 col-6" value="supprimer un forum" >
+      <input type="button" class="m-1 col-6" value="supprimer/modifier un forum" @click="showModif = !showModif" v-show="showAddForum - showModif">
       </div> 
     </div>
   </div>
@@ -47,27 +55,45 @@ import {  mapGetters } from 'vuex'
 import { mapState } from 'vuex'
 export default{
   computed:{
-    ... mapState(['tokenStore','pseudoStore', 'idStore', 'mailStore', 'statusStore']),
-    ... mapGetters(['NEW_USER'])
+    ... mapState(['tokenStore', 'statusStore', 'idCanalStore']),
+    ... mapGetters(['SELECT_CANAL'])
   },
   nape: "app",
   data() {
     return {
-      pseudo:'',
-      mdp:'',
-      mail:''
+      showAddForum: true,
+      showModif: false,
+      showChangeNameCanal: false,
+      listCanal: '',
+      canalName: '',
     }
   },
-    mounted() {
-      HTTP.defaults.headers.common['Authorization'] = `bearer ${this.tokenStore}`;
-      let result = document.getElementById('result')
-      result.innerHTML= 'hello';
-      HTTP.get('/canal/welcome')
-      .then(e =>{
-        let response = e.data.response[0][0]
-        result.innerText= response.nom_canal
+  mounted() {
+    HTTP.defaults.headers.common['Authorization'] = `bearer ${this.tokenStore}`;
+    HTTP.get('/canal/welcome')
+    .then(response =>{
+      this.listCanal = response.data.response[0]
+    })
+  },
+  methods: {
+    newForum(){
+    HTTP.defaults.headers.common['Authorization'] = `bearer ${this.tokenStore}`;
+    HTTP.post('/canal/createCanal',{
+      params:{
+        canalName: this.canalName,
+      }
+    }).then(() =>{
+        this.$router.go('/forum')
       })
-      
+      .catch(error =>{
+        console.log(error)
+      })
+    },
+    goToCanal(id, name){
+      let response = [id, name]
+      this.$store.commit('SELECT_CANAL', response)
+      this.$router.push({name: 'SujetList', params: {idCanal: this.idCanalStore}})
+    }
   }
 }
 </script>

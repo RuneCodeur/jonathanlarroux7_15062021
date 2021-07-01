@@ -1,7 +1,7 @@
 <template>
   <div class="inscription">
     
-    <nav class="navbar-brand m-0 text-center">
+    <nav class="navbar-brand m-0 text-center fs-6 d-flex flex-wrap justify-content-center border">
       <router-link to="/" class="mx-3">connexion</router-link>
       <router-link to="/inscription" class="mx-3">inscription</router-link>
     </nav>
@@ -69,7 +69,7 @@ export default{
 
         .then(response =>{
           this.$store.commit("NEW_USER", response.data)
-          this.$router.push('/forum')
+          this.$router.push('/welcome')
         })
         .catch(error => {
           document.getElementById('errorMsg').innerText = error;
