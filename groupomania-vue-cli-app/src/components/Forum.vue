@@ -21,7 +21,7 @@
           </div>
           <div class="col-1 d-flex flex-column p-0 fs-6 justify-content-around">
             <i class="fas fa-cog btn-warning py-2" v-show="showModif" @click="showChangeNameCanal = !showChangeNameCanal"></i>
-            <i class="fas fa-trash-alt btn-danger py-2" v-show="showModif" @click="destroyCanal"></i>
+            <i class="fas fa-trash-alt btn-danger py-2" v-show="showModif" @click="destroyCanal(canal.id)"></i>
           </div>
         </div>
 
@@ -56,7 +56,7 @@ import { mapState } from 'vuex'
 export default{
   computed:{
     ... mapState(['tokenStore', 'statusStore', 'idCanalStore']),
-    ... mapGetters(['SELECT_CANAL'])
+    ... mapGetters(['SELECT_CANAL','UNSELECT_CANAL'])
   },
   nape: "app",
   data() {
@@ -93,7 +93,18 @@ export default{
       let response = [id, name]
       this.$store.commit('SELECT_CANAL', response)
       this.$router.push({name: 'SujetList', params: {idCanal: this.idCanalStore}})
-    }
+    },
+    destroyCanal(id){
+      const formulaire = {
+        idSujet: id,
+      }
+      HTTP.defaults.headers.common['Authorization'] = `bearer ${this.tokenStore}`;
+      HTTP.delete('/canal/'+ id, formulaire)
+      .then(() =>{
+        this.$store.commit('UNSELECT_CANAL')
+        this.$router.push({name: 'News'})
+      })
+    },
   }
 }
 </script>

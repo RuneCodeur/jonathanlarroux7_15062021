@@ -5,17 +5,19 @@ let regex = new RegExp("^[A-Za-z-éèêëçàâùï€$£_'.;:,@?!()\n 0-9]+$");
 
 //obtient la liste de tout les messages du sujet -- ok
 exports.getMsg= (req, res) => {
-  connect.query("SELECT id, id_user, name_user, message, media, date FROM list_msg WHERE position_canal = " + req.body.idCanal + " AND position_sujet= " + req.body.idSujet + ";")
-  .then(response => res.status(200).json({response}))
+  connect.query("SELECT id, id_user, name_user, message, media, DATE_FORMAT(date, '%d/%m/%Y à %HH%i') as date FROM list_msg WHERE position_canal = " + req.params.idCanal + " AND position_sujet= " + req.params.idSujet + ";")
+  .then(response =>{ 
+    res.status(200).json({response})})
   .catch(error => res.status(500).json({error}));
 };
 
 //crée un message -- ok
 exports.createMsg= (req, res) => {
+  console.log('lolilol423')
   //si il n'y a pas de media
   if( req.file === undefined){
     if((regex.test(req.body.msg) === true)){
-      connect.query("INSERT INTO list_msg SET id_user=" + req.body.userId + ", name_user= '" + req.body.userName + "', message='" + req.body.msg + "', date=NOW(), position_canal=" + req.body.idCanal+ ", position_sujet=" + req.body.idSujet + ";")
+      connect.query("INSERT INTO list_msg SET id_user=" + req.body.id + ", name_user= '" + req.body.pseudo + "', message='" + req.body.msg + "', date=NOW(), position_canal=" + req.body.idCanal+ ", position_sujet=" + req.body.idSujet + ";")
       .then(() => res.status(200).json({ message: "message posté !"}))
       .catch(error => res.status(500).json({error}));
     }else{

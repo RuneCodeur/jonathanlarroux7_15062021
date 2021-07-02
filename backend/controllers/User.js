@@ -9,7 +9,7 @@ exports.signup = (req, res) => {
   if ((regex.test(req.body.mdp) === true) && (mailRegex.test(req.body.mail) === true) && (regex.test(req.body.pseudo) === true)){
     bcrypt.hash(req.body.mdp, 10)
     .then(hash =>{
-      connect.query("INSERT INTO users SET pseudo ='" + req.body.pseudo + "', mail='" + req.body.mail + "', mdp='" + hash + "', status='poisson';")
+      connect.query("INSERT INTO users SET pseudo ='" + req.body.pseudo + "', mail='" + req.body.mail + "', mdp='" + hash + "';")
       .then(() => {
         return res.status(200).json({ message: "utilisateur crée !" });
       })

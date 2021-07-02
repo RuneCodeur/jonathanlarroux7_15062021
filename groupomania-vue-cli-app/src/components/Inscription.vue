@@ -54,11 +54,10 @@ export default{
       const formulaire = {
         pseudo: this.pseudo,
         mail: this.mail,
-        mdp: this.mdp
+        mdp: this.mdp,
         }
 
       HTTP.post('/auth/signup/', formulaire)
-
       .then(() =>{
         HTTP.get('/auth/login/', {
         params:{
@@ -66,11 +65,11 @@ export default{
           mdp:this.mdp
           }
         })
-
         .then(response =>{
           this.$store.commit("NEW_USER", response.data)
           this.$router.push('/welcome')
         })
+
         .catch(error => {
           document.getElementById('errorMsg').innerText = error;
           inscriButton.disabled = false;
@@ -78,7 +77,6 @@ export default{
       })
       .catch(error => {
         document.getElementById('errorMsg').innerText = error;
-        console.log(error);
         inscriButton.disabled= false;
       });
     }
