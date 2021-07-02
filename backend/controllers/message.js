@@ -17,7 +17,7 @@ exports.createMsg= (req, res) => {
   //si il n'y a pas de media
   if( req.file === undefined){
     if((regex.test(req.body.msg) === true)){
-      connect.query("INSERT INTO list_msg SET id_user=" + req.body.id + ", name_user= '" + req.body.pseudo + "', message='" + req.body.msg + "', date=NOW(), position_canal=" + req.body.idCanal+ ", position_sujet=" + req.body.idSujet + ";")
+      connect.query("INSERT INTO list_msg SET id_user=" + req.body.id + ", name_user= '" + req.body.pseudo + "', message='" + req.body.msg + "', date=SYSDATE(), position_canal=" + req.body.idCanal+ ", position_sujet=" + req.body.idSujet + ";")
       .then(() => res.status(200).json({ message: "message posté !"}))
       .catch(error => res.status(500).json({error}));
     }else{
@@ -69,7 +69,7 @@ exports.modifyMyMsg= (req, res) => {
 
 //supprime son message -- ok
 exports.deleteMyMsg= (req, res) => {
-  connect.query("DELETE FROM list_msg WHERE id=" + req.body.msgId + ";")
+  connect.query("DELETE FROM list_msg WHERE id=" + req.params.idMsg + ";")
   .then(() => res.status(200).json({ message: "message supprimé !"}))
   .catch(error => res.status(500).json({error}));
 };

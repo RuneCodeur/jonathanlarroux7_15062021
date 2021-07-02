@@ -20,7 +20,7 @@
             <div class="row m-0"> 
               <div class="fst-italic p-0 col-8 border"> le {{msg.date}}</div>
             <i class="fas fa-cog btn-warning py-2 col-2 text-center"></i>
-            <i class="fas fa-trash-alt btn-danger py-2 col-2 text-center"></i>
+            <i class="fas fa-trash-alt btn-danger py-2 col-2 text-center" @click="destroyMsg(msg.id)"></i>
             </div>
           </div>
           <div class="mx-2 my-4">{{msg.message}}</div>
@@ -73,7 +73,14 @@ export default {
       .catch(error =>{
         console.log(error)
       })
-    }
+    },
+    destroyMsg(id){
+      HTTP.defaults.headers.common['Authorization'] = `bearer ${this.tokenStore}`;
+      HTTP.delete('/messages/'+ this.$route.params.idCanal + '/' + this.$route.params.idSujet + '/' + id)
+      .then(() =>{
+        this.$router.push({name: 'News'})
+      })
+    },
   }
 }
 </script>
