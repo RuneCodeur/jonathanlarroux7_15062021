@@ -38,7 +38,7 @@ exports.createMsg= (req, res) => {
 
 //obtient la liste de tout les messages récents -- ok
 exports.getNewMsg= (req, res) => {
-  connect.query("SELECT id_user, name_user, message, media, date, position_canal, position_sujet FROM list_msg ORDER BY date LIMIT 10;")
+  connect.query("SELECT id_user, name_user, message, media, DATE_FORMAT(date, '%d/%m/%Y à %HH%i') as date, position_canal, position_sujet FROM list_msg ORDER BY date LIMIT 10;")
   .then(response => res.status(200).json({response}))
   .catch(error => res.status(500).json({error}));
 };
@@ -48,7 +48,7 @@ exports.modifyMyMsg= (req, res) => {
   //si il n'y a pas de media
   if( req.file === undefined){
     if((regex.test(req.body.msg) === true)){
-      connect.query("UPDATE list_msg SET message= '" + req.body.msg + "', date= NOW() WHERE id=" + req.body.msgId + ";")
+      connect.query("UPDATE list_msg SET message= '" + req.body.newMsg + "', date= NOW() WHERE id=" + req.body.id + ";")
       .then(() => res.status(200).json({ message: "message modifié !"}))
       .catch(error => res.status(500).json({error}));
     }else{

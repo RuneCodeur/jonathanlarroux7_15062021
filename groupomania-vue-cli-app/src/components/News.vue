@@ -14,13 +14,13 @@
 
       <div class="d-flex align-items-center flex-column">
         
-        <router-link to="/" class="text-decoration-none text-dark card col-10 my-2 text-start border border-primary">
+        <div class="text-decoration-none text-dark card col-10 my-2 text-start border border-primary" v-for="msg in newMsg" :key="msg.id">
           <div class="border-bottom border-secondary p-1 mb-4">
-            <div class="fw-bold fs-5">jean roger moure</div>
-            <div class="fst-italic px-3">le 12/03/2021 à 12h41</div>
+            <div class="fw-bold fs-5">{{msg.name_user}}</div>
+            <div class="fst-italic px-3">le {{msg.date}}</div>
           </div>
-          <div class="mx-2">alors voila, moi j'aime bien les saucisses de francfort</div>
-        </router-link>
+          <div class="mx-2">{{msg.message}}</div>
+        </div>
 
       </div>
     </div>
@@ -28,7 +28,28 @@
 </template>
 
 <script>
-export default {
+import{ HTTP } from '../http-constants'
+import { mapState } from 'vuex'
+export default{
+  computed:{
+    ... mapState(['tokenStore', 'statusStore', 'idCanalStore']),
+  },
+  nape: "app",
+  data() {
+    return {
+      newMsg:'',
+    }
+  },
+  mounted() {
+    HTTP.defaults.headers.common['Authorization'] = `bearer ${this.tokenStore}`;
+    HTTP.get('/messages/New')
+    .then(response =>{
+      this.newMsg = response.data.response[0].reverse()
+    })
+    .catch(err=>{
+      console.log(err)
+    })
+  },
 }
 </script>
 

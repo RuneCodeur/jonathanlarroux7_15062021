@@ -20,7 +20,7 @@
           {{canal.nom_canal}}
           </div>
           <div class="col-1 d-flex flex-column p-0 fs-6 justify-content-around">
-            <i class="fas fa-cog btn-warning py-2" v-show="showModif" @click="showChangeNameCanal = !showChangeNameCanal"></i>
+            <i class="fas fa-cog btn-warning py-2" v-show="showModif" @click="showChangeNameCanal = !showChangeNameCanal; idChangeCanal= canal.id, nameChangeCanal=canal.nom_canal"></i>
             <i class="fas fa-trash-alt btn-danger py-2" v-show="showModif" @click="destroyCanal(canal.id)"></i>
           </div>
         </div>
@@ -38,8 +38,8 @@
 
         <fieldset class="text-center my-4" v-show="showChangeNameCanal">
            <label for="title" class=""> nouveau nom du forum: </label>
-          <input type="text" name="title" placeholder="titre du forum" class="m-2 col-6" v-model="canalName">
-          <input type="button" value="modifier" class="col-3" @click="modifForum" >
+          <input type="text" name="title"  class="m-2 col-6" v-model="nameChangeCanal">
+          <input type="button" value="modifier" class="col-3" @click="modifyCanal" >
 
         </fieldset>
       </form>
@@ -53,12 +53,15 @@
 import{ HTTP } from '../http-constants'
 import {  mapGetters } from 'vuex'
 import { mapState } from 'vuex'
+
 export default{
   computed:{
     ... mapState(['tokenStore', 'statusStore', 'idCanalStore']),
     ... mapGetters(['SELECT_CANAL','UNSELECT_CANAL'])
   },
+
   nape: "app",
+
   data() {
     return {
       showAddForum: true,
@@ -66,8 +69,11 @@ export default{
       showChangeNameCanal: false,
       listCanal: '',
       canalName: '',
+      idChangeCanal: '',
+      nameChangeCanal:'',
     }
   },
+
   mounted() {
     HTTP.defaults.headers.common['Authorization'] = `bearer ${this.tokenStore}`;
     HTTP.get('/canal/welcome')
@@ -75,6 +81,7 @@ export default{
       this.listCanal = response.data.response[0]
     })
   },
+
   methods: {
     newForum(){
     HTTP.defaults.headers.common['Authorization'] = `bearer ${this.tokenStore}`;
@@ -89,11 +96,25 @@ export default{
         console.log(error)
       })
     },
+
     goToCanal(id, name){
       let response = [id, name]
       this.$store.commit('SELECT_CANAL', response)
       this.$router.push({name: 'SujetList', params: {idCanal: this.idCanalStore}})
     },
+
+    modifyCanal(){
+      let formulaire= {
+        canalId: this.idChangeCanal,
+        canalName: this.nameChangeCanal,
+      }
+      HTTP.defaults.headers.common['Authorization'] = `bearer ${this.tokenStore}`;
+      HTTP.put('/canal/modifyCanal', formulaire)
+      .then(()=>{
+      this.$router.push({name: 'News'})
+      })
+    },
+
     destroyCanal(id){
       const formulaire = {
         idSujet: id,
@@ -105,6 +126,7 @@ export default{
         this.$router.push({name: 'News'})
       })
     },
+
   }
 }
 </script>

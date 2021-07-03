@@ -22,12 +22,20 @@
       </div>
 
           <div class="col-1 d-flex flex-column p-0 fs-6 justify-content-around">
-            <i class="fas fa-cog btn-warning py-2" v-show="showModif"></i>
+            <i class="fas fa-cog btn-warning py-2" v-show="showModif" @click="showChangeNameSujet = !showChangeNameSujet; idChangeSujet= sujet.id, nameChangeSujet=sujet.nom_sujet"></i>
             <i class="fas fa-trash-alt btn-danger py-2" v-show="showModif" @click="destroySujet(sujet.id)"></i>
           </div>
       </div>
 
-      <router-link :to="{ name:`SujetCreate`, params: { idCanal: idCanalStore }}" class="mx-3">nouveau sujet</router-link>
+      <form class="d-flex justify-content-center row " method="post">
+        <fieldset class="text-center my-4" v-show="showChangeNameSujet">
+          <label for="title" class=""> titre du sujet: </label>
+          <input type="text" name="title" placeholder="titre du forum" class="m-2 col-6" v-model="nameChangeSujet">
+          <input type="button" value="ajouter" class="col-3" @click="modifySujet" >
+        </fieldset>
+      </form>
+
+      <router-link :to="{ name:`SujetCreate`, params: { idCanal: idCanalStore }}" class="mx-3" v-show="!showModif">nouveau sujet</router-link>
       
       <div class="d-flex justify-content-center row mt-4 " >
       
@@ -52,6 +60,9 @@ export default {
     return {
       listSujet:'',
       showModif: false,
+      showChangeNameSujet: false,
+      idChangeSujet: '',
+      nameChangeSujet: '',
     }
   },
   mounted() {
@@ -67,6 +78,19 @@ export default {
       this.$store.commit('SELECT_SUJET', response)
       this.$router.push({name: 'Sujet', params: {idCanal: this.idCanalStore, idSujet: this.idSujetStore}})
     },
+    modifySujet(){
+      let formulaire= {
+        sujetId: this.idChangeSujet,
+        sujetName: this.nameChangeSujet,
+      }
+      console.log(this.idCanalStore)
+      HTTP.defaults.headers.common['Authorization'] = `bearer ${this.tokenStore}`;
+      HTTP.put('/canal/' + this.idCanalStore + '/modifySujet', formulaire)
+      .then(()=>{
+      this.$router.push({name: 'News'})
+      })
+    },
+
     destroySujet(id){
       const formulaire = {
         idSujet: id,
@@ -75,7 +99,7 @@ export default {
       HTTP.delete('/canal/'+ this.$route.params.idCanal +'/'+ id, formulaire)
       .then(() =>{
         this.$store.commit('UNSELECT_SUJET')
-        this.$router.push({name: 'forum'})
+        this.$router.push({name: 'Forum'})
       })
     },
   }

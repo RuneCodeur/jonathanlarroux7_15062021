@@ -19,17 +19,21 @@
             <div class="fw-bold fs-5">{{msg.name_user}}</div>
             <div class="row m-0"> 
               <div class="fst-italic p-0 col-8 border"> le {{msg.date}}</div>
-            <i class="fas fa-cog btn-warning py-2 col-2 text-center"></i>
-            <i class="fas fa-trash-alt btn-danger py-2 col-2 text-center" @click="destroyMsg(msg.id)"></i>
+            <i class="fas fa-cog btn-warning py-2 col-2 text-center" @click="modifyMsgId = msg.id, modifyMsgValue = msg.message, showModify = !showModify" v-show="showModify"></i>
+            <i class="fas fa-trash-alt btn-danger py-2 col-2 text-center" @click="destroyMsg(msg.id)" v-show="showModify"></i>
             </div>
           </div>
-          <div class="mx-2 my-4">{{msg.message}}</div>
+          <div class="p-0 card" v-if="modifyMsgId === msg.id">
+            <textarea class="m-0 p-2 pt-4" v-model="modifyMsgValue"></textarea>
+            <input class="m-0" type="button" value="modifier le message" @click="modifyMsg()">
+          </div>
+          <div class="mx-2 my-4" v-else>{{msg.message}}</div>
         </div>
 
       </div>
-      <div class="mt-5 d-flex align-items-center flex-column ">
+      <div class="mt-5 d-flex align-items-center flex-column" v-if="modifyMsgId === ''">
         <textarea name="commentaire" class="col-10" placeholder="écrit ton commentaire ici !" v-model="newMsg"></textarea>
-        <input class="mt-2" type="button" value="poster" @click="msgCreation">
+        <input class="mt-2" type="button" value="poster" @click="createMsg">
       </div>
     </div>
   </div>
@@ -38,17 +42,24 @@
 <script>
 import{ HTTP } from '../http-constants'
 import { mapState } from 'vuex'
+
 export default {
   computed:{
     ... mapState(['tokenStore', 'pseudoStore', 'idStore', 'statusStore', 'idCanalStore', 'nameCanalStore', 'idSujetStore', 'nameSujetStore', 'creatorSujetStore']),
   }, 
+
   nape: "app",
+
   data() {
     return {
       newMsg:'',
       listMsg:'',
+      modifyMsgValue: '',
+      modifyMsgId:'',
+      showModify: true,
     }
   },
+
   mounted() {
     HTTP.defaults.headers.common['Authorization'] = `bearer ${this.tokenStore}`;
     HTTP.get('/messages/'+ this.$route.params.idCanal + '/' + this.$route.params.idSujet)
@@ -56,8 +67,9 @@ export default {
       this.listMsg = response.data.response[0]
     })
   },
+
   methods: {
-    msgCreation() {
+    createMsg() {
       HTTP.defaults.headers.common['Authorization'] = `bearer ${this.tokenStore}`;
       const formulaire = {
         id: this.idStore,
@@ -74,6 +86,21 @@ export default {
         console.log(error)
       })
     },
+
+    modifyMsg(){
+      let formulaire = {
+        id: this.modifyMsgId,
+        newMsg: this.modifyMsgValue,
+      }
+
+      console.log(this.modifyMsgValue, formulaire)
+      HTTP.defaults.headers.common['Authorization'] = `bearer ${this.tokenStore}`;
+      HTTP.put('/messages/'+ this.$route.params.idCanal + '/' + this.$route.params.idSujet + '/' + this.modifyMsgId, formulaire)
+      .then(()=>{
+      this.$router.push({name: 'News'})
+      })
+    },
+
     destroyMsg(id){
       HTTP.defaults.headers.common['Authorization'] = `bearer ${this.tokenStore}`;
       HTTP.delete('/messages/'+ this.$route.params.idCanal + '/' + this.$route.params.idSujet + '/' + id)
@@ -81,6 +108,7 @@ export default {
         this.$router.push({name: 'News'})
       })
     },
+
   }
 }
 </script>

@@ -59,7 +59,7 @@ exports.createSujet= (req, res) => {
 //modifie le nom d'un canal --ok 
 exports.modifyCanal= (req, res) => {
   if((regex.test(req.body.canalName) === true)){
-    connect.query("UPDATE list_canal SET nom_canal='" + req.body.canalName + "' WHERE id=" + req.body.idCanal + ";")
+    connect.query("UPDATE list_canal SET nom_canal='" + req.body.canalName + "' WHERE id=" + req.body.canalId + ";")
     .then(() => res.status(200).json({ message: "nouveau canal crée !"}))
     .catch(error => res.status(500).json({error}));
   }else{
@@ -69,8 +69,9 @@ exports.modifyCanal= (req, res) => {
 
 //modifie le nom d'un sujet -- ok
 exports.modifySujet= (req, res) => {
+  console.log(req.body)
   if((regex.test(req.body.sujetName) === true)){
-    connect.query("UPDATE list_sujet SET nom_sujet='" + req.body.sujetName.replace("'", "''") + "' WHERE id=" + req.body.idSujet + ";")
+    connect.query("UPDATE list_sujet SET nom_sujet='" + req.body.sujetName.replace("'", "''") + "' WHERE id=" + req.body.sujetId + ";")
     .then(() => res.status(200).json({ message: "le sujet à changé de nom !"}))
     .catch(error => res.status(500).json({error}));
   }else{
