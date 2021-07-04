@@ -15,13 +15,15 @@
   
       <form class="d-flex justify-content-center row my-4" method="post">
         <fieldset class="text-center">
+          
+        <div id="errorMsg" class="text-danger"></div>
 
            <label for="title" class=""> titre du sujet: </label>
           <input type="text" name="title" placeholder="titre du sujet" class="m-2 col-6" v-model="sujetName">
         
         <textarea name="commentaire" class="col-10" placeholder="mon commentaire ici !" v-model="msg"></textarea>
         </fieldset>
-        <input type="button" value="créer un sujet" class="col-5" @click="sujetCreation">
+        <input type="button" value="créer un nouveau sujet" id="button-create" class="col-5" @click="sujetCreation">
       </form>
     </div>
   </div>
@@ -31,12 +33,15 @@
 import{HTTP} from '../http-constants'
 import {  mapGetters } from 'vuex'
 import { mapState } from 'vuex'	
+
 export default{
   computed:{
     ... mapState(['tokenStore','pseudoStore', 'idStore', 'mailStore', 'statusStore']),
     ... mapGetters(['NEW_USER'])
   },
+
   nape: "app",
+
   data() {
     return {
       sujetName :'',
@@ -46,7 +51,8 @@ export default{
 
   methods: {
     sujetCreation() {
-      HTTP.defaults.headers.common['Authorization'] = `bearer ${this.tokenStore}`;
+      let buttonCreate= document.getElementById('button-create'); 
+      buttonCreate.disabled = true;
       const formulaire = {
         sujetName: this.sujetName,
         id: this.idStore,
@@ -54,14 +60,17 @@ export default{
         pseudo: this.pseudoStore,
         msg: this.msg,
         }
+      HTTP.defaults.headers.common['Authorization'] = `bearer ${this.tokenStore}`;
       HTTP.post('/canal/' + this.$route.params.idCanal + '/createSujet', formulaire)
       .then(() =>{
       this.$router.push({name: 'SujetList', params: {idCanal: this.$route.params.idCanal}})
       })
-      .catch(error =>{
-        console.log(error)
+      .catch(err =>{
+        buttonCreate.disabled = false;
+        document.getElementById('errorMsg').innerText = err;
       })
-    }
+    },
+
   }
 }
 </script>

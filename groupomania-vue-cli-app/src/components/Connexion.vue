@@ -29,12 +29,15 @@
 import{HTTP} from '../http-constants'
 import {  mapGetters } from 'vuex'
 import { mapState } from 'vuex'
+
 export default{
   computed:{
     ... mapState(['token','pseudoData', 'id', 'mailData', 'status']),
     ... mapGetters(['NEW_USER'])
   },
+
   nape: "app",
+
   data() {
     return {
       pseudo:'',
@@ -42,27 +45,28 @@ export default{
       mail:'',
     }
   },
+
   methods: {
     connection() {
       let connectButton = document.getElementById('connect-button');
       connectButton.disabled = true;
-
       HTTP.get('/auth/login/', {
         params:{
           mail: this.mail,
           mdp:this.mdp
         }
       })
-
       .then(response =>{
         this.$store.commit("NEW_USER", response.data)
         this.$router.push('/forum')
       })
-      .catch(error => {
-        document.getElementById('errorMsg').innerText = error;
+      .catch(err => {
+        console.log(err.status)
+        document.getElementById('errorMsg').innerText = err;
         connectButton.disabled = false;
       });
     }
+
   }
 }
 </script>

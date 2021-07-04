@@ -21,7 +21,7 @@
           <label for="password" class="col-3 col-md-2">mot de passe: </label><input type="password" name="password" id="password" v-model="mdp">
         </div>
         <div id="errorMsg" class="text-danger"></div>
-        <input type='button' class="my-4" value="creer un compte" @click="addTodo" id="inscri-button">
+        <input type='button' class="my-4" value="creer un compte" @click="inscription" id="inscri-button">
        
       </fieldset>
     </form>
@@ -31,13 +31,16 @@
 <script>
 import{HTTP} from '../http-constants'
 import {  mapGetters } from 'vuex'
-import { mapState } from 'vuex'	
+import { mapState } from 'vuex'
+
 export default{
   computed:{
     ... mapState(['tokenStore','pseudoStore', 'idStore', 'mailStore', 'statusStore']),
     ... mapGetters(['NEW_USER'])
   },
+
   nape: "app",
+
   data() {
     return {
       pseudo:'',
@@ -47,16 +50,14 @@ export default{
   },
 
   methods: {
-    addTodo() {
+    inscription() {
       let inscriButton= document.getElementById('inscri-button'); 
       inscriButton.disabled= true;
-
       const formulaire = {
         pseudo: this.pseudo,
         mail: this.mail,
         mdp: this.mdp,
         }
-
       HTTP.post('/auth/signup/', formulaire)
       .then(() =>{
         HTTP.get('/auth/login/', {
@@ -69,17 +70,17 @@ export default{
           this.$store.commit("NEW_USER", response.data)
           this.$router.push('/welcome')
         })
-
-        .catch(error => {
-          document.getElementById('errorMsg').innerText = error;
+        .catch(err => {
+          document.getElementById('errorMsg').innerText = err;
           inscriButton.disabled = false;
         });
       })
-      .catch(error => {
-        document.getElementById('errorMsg').innerText = error;
+      .catch(err => {
+        document.getElementById('errorMsg').innerText = err;
         inscriButton.disabled= false;
       });
     }
+    
   }
 }
 </script>

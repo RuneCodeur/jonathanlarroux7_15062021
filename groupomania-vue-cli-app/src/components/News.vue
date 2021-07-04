@@ -21,7 +21,7 @@
           </div>
           <div class="mx-2">{{msg.message}}</div>
         </div>
-
+        <div id="errorMsg" class="text-danger"></div>
       </div>
     </div>
   </div>
@@ -30,16 +30,20 @@
 <script>
 import{ HTTP } from '../http-constants'
 import { mapState } from 'vuex'
+
 export default{
   computed:{
-    ... mapState(['tokenStore', 'statusStore', 'idCanalStore']),
+    ... mapState(['tokenStore', 'statusStore',]),
   },
+
   nape: "app",
+
   data() {
     return {
       newMsg:'',
     }
   },
+
   mounted() {
     HTTP.defaults.headers.common['Authorization'] = `bearer ${this.tokenStore}`;
     HTTP.get('/messages/New')
@@ -47,9 +51,10 @@ export default{
       this.newMsg = response.data.response[0].reverse()
     })
     .catch(err=>{
-      console.log(err)
+      document.getElementById('errorMsg').innerText = err;
     })
   },
+  
 }
 </script>
 

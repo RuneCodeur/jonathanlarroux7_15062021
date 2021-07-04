@@ -27,21 +27,25 @@ exports.login = (req, res) => {
     connect.query("SELECT * FROM users WHERE mail='" + req.query.mail + "' LIMIT 1;")
     .then(e => {
       let response= e[1][0]
-      bcrypt.compare(req.query.mdp, response.mdp)
-      .then(() => {
-        console.log('utilisateur connecté !')
-        res.status(200).json({
-        id: response.id,
-        status: response.status,
-        pseudo: response.pseudo,
-        mail: response.mail,
-        token: jwt.sign(
-          {id: response.id},
-          '487b05ac-0e11-4720-a02b-c36806ea094c', //clé secrete
-          { expiresIn: '72H' }, //durée d'expiration du token
-          {httpOnly: true})
-        })
-      }).catch(() => res.status(401).json({ error: "mot de passe incorrect." }));
+      bcrypt.compare(req.query.mdp, response.mdp, function(err, result){
+        if(result === true){
+          console.log('utilisateur connecté !')
+          res.status(200).json({
+          id: response.id,
+          status: response.status,
+          pseudo: response.pseudo,
+          mail: response.mail,
+          token: jwt.sign(
+            {id: response.id},
+            '487b05ac-0e11-4720-a02b-c36806ea094c', //clé secrete
+            { expiresIn: '72H' }, //durée d'expiration du token
+            {httpOnly: true})
+          })
+        }
+        else{
+          res.status(401).json({ error: "mot de passe incorrect." })
+        }
+      })
     }).catch(() => res.status(405).json({ error: "utilisateur introuvable." }));
   }else {
     console.log("caractère non autorisé.")

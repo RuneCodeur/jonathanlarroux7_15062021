@@ -26,6 +26,8 @@
             <i class="fas fa-trash-alt btn-danger py-2" v-show="showModif" @click="destroySujet(sujet.id)"></i>
           </div>
       </div>
+      
+      <div id="errorMsg" class="text-danger"></div>
 
       <form class="d-flex justify-content-center row " method="post">
         <fieldset class="text-center my-4" v-show="showChangeNameSujet">
@@ -50,12 +52,15 @@
 import{ HTTP } from '../http-constants'
 import {  mapGetters } from 'vuex'
 import { mapState } from 'vuex'
+
 export default {
   computed:{
     ... mapState(['tokenStore', 'statusStore', 'idCanalStore', 'nameCanalStore', 'idSujetStore']),
     ... mapGetters(['SELECT_SUJET', 'UNSELECT_SUJET'])
   }, 
+
   nape: "app",
+
   data() {
     return {
       listSujet:'',
@@ -65,12 +70,17 @@ export default {
       nameChangeSujet: '',
     }
   },
+
   mounted() {
     HTTP.defaults.headers.common['Authorization'] = `bearer ${this.tokenStore}`;
     HTTP.get('/canal/'+ this.$route.params.idCanal)
     .then(response =>{
       this.listSujet = response.data.response[0]
     })
+    .catch(err =>{
+      document.getElementById('errorMsg').innerText = err;
+    })
+
   },
   methods: {
     goToSujet(id, name, creator){
@@ -78,6 +88,7 @@ export default {
       this.$store.commit('SELECT_SUJET', response)
       this.$router.push({name: 'Sujet', params: {idCanal: this.idCanalStore, idSujet: this.idSujetStore}})
     },
+
     modifySujet(){
       let formulaire= {
         sujetId: this.idChangeSujet,
@@ -88,6 +99,9 @@ export default {
       HTTP.put('/canal/' + this.idCanalStore + '/modifySujet', formulaire)
       .then(()=>{
       this.$router.push({name: 'News'})
+      })
+      .catch(err =>{
+        document.getElementById('errorMsg').innerText = err;
       })
     },
 
@@ -101,7 +115,11 @@ export default {
         this.$store.commit('UNSELECT_SUJET')
         this.$router.push({name: 'Forum'})
       })
+      .catch(err =>{
+        document.getElementById('errorMsg').innerText = err;
+      })
     },
+
   }
 }
 </script>

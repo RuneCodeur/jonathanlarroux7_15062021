@@ -24,9 +24,11 @@
             <i class="fas fa-trash-alt btn-danger py-2" v-show="showModif" @click="destroyCanal(canal.id)"></i>
           </div>
         </div>
-
       </div>
-      <div class="d-flex justify-content-center row mt-4" >
+      
+      <div id="errorMsg" class="text-danger"></div>
+
+      <div class="d-flex justify-content-center row mt-4">
         <input type="button" class="m-1 col-6" value="ajouter un forum" @click="showAddForum = !showAddForum" v-show="showAddForum - showModif">
       <form class="d-flex justify-content-center row " method="post">
 
@@ -40,7 +42,6 @@
            <label for="title" class=""> nouveau nom du forum: </label>
           <input type="text" name="title"  class="m-2 col-6" v-model="nameChangeCanal">
           <input type="button" value="modifier" class="col-3" @click="modifyCanal" >
-
         </fieldset>
       </form>
       <input type="button" class="m-1 col-6" value="supprimer/modifier un forum" @click="showModif = !showModif" v-show="showAddForum - showModif">
@@ -80,6 +81,9 @@ export default{
     .then(response =>{
       this.listCanal = response.data.response[0]
     })
+    .catch(err => {
+      document.getElementById('errorMsg').innerText = err;
+    });
   },
 
   methods: {
@@ -92,9 +96,9 @@ export default{
     }).then(() =>{
         this.$router.go('/forum')
       })
-      .catch(error =>{
-        console.log(error)
-      })
+      .catch(err => {
+        document.getElementById('errorMsg').innerText = err;
+      });
     },
 
     goToCanal(id, name){
@@ -113,6 +117,9 @@ export default{
       .then(()=>{
       this.$router.push({name: 'News'})
       })
+      .catch(err => {
+        document.getElementById('errorMsg').innerText = err;
+      });
     },
 
     destroyCanal(id){
@@ -125,6 +132,9 @@ export default{
         this.$store.commit('UNSELECT_CANAL')
         this.$router.push({name: 'News'})
       })
+      .catch(err => {
+        document.getElementById('errorMsg').innerText = err;
+      });
     },
 
   }

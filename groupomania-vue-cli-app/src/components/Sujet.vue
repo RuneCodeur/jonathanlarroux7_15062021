@@ -14,6 +14,7 @@
 
       <div class="d-flex align-items-center flex-column">
         
+        <div id="errorMsg" class="text-danger"></div>
         <div class="card col-11 text-start border border-primary" v-for="msg in listMsg" :key="msg.id">
           <div class="border-bottom border-secondary p-1">
             <div class="fw-bold fs-5">{{msg.name_user}}</div>
@@ -82,8 +83,8 @@ export default {
       .then(() =>{
       this.$router.push({name: 'News'})
       })
-      .catch(error =>{
-        console.log(error)
+      .catch(err =>{
+        document.getElementById('errorMsg').innerText = err;
       })
     },
 
@@ -92,12 +93,14 @@ export default {
         id: this.modifyMsgId,
         newMsg: this.modifyMsgValue,
       }
-
       console.log(this.modifyMsgValue, formulaire)
       HTTP.defaults.headers.common['Authorization'] = `bearer ${this.tokenStore}`;
       HTTP.put('/messages/'+ this.$route.params.idCanal + '/' + this.$route.params.idSujet + '/' + this.modifyMsgId, formulaire)
       .then(()=>{
       this.$router.push({name: 'News'})
+      })
+      .catch(err =>{
+        document.getElementById('errorMsg').innerText = err;
       })
     },
 
@@ -106,6 +109,9 @@ export default {
       HTTP.delete('/messages/'+ this.$route.params.idCanal + '/' + this.$route.params.idSujet + '/' + id)
       .then(() =>{
         this.$router.push({name: 'News'})
+      })
+      .catch(err =>{
+        document.getElementById('errorMsg').innerText = err;
       })
     },
 
