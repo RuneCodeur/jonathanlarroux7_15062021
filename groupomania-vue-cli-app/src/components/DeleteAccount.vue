@@ -22,12 +22,11 @@
 
 <script>
 import{HTTP} from '../http-constants'
-import {  mapGetters } from 'vuex'
-import { mapState } from 'vuex'	
+import { mapState } from 'vuex'
+import { mapActions } from 'vuex'
 
 export default { 
   computed:{... mapState(['tokenStore','pseudoStore', 'idStore', 'mailStore']),
-    ... mapGetters(['DISCONNECT_USER'])
   },
 
   nape: "app",
@@ -39,6 +38,7 @@ export default {
   },
 
   methods: {
+    ... mapActions(['disconnect_user']),
     deleteAccount(){
       HTTP.defaults.headers.common['Authorization'] = `bearer ${this.tokenStore}`;
       HTTP.delete('auth/delete', {
@@ -49,7 +49,7 @@ export default {
         }
       })
       .then(() =>{
-        this.$store.commit('DISCONNECT_USER');
+        this.$store.dispatch('disconnect_user');
         this.$router.push('/');
       })
       .catch(err =>{

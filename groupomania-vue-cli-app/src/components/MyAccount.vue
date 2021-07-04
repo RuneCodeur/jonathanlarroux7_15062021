@@ -40,12 +40,11 @@
 
 <script>
 import{HTTP} from '../http-constants'
-import {  mapGetters } from 'vuex'
-import { mapState } from 'vuex'	
+import { mapState } from 'vuex'
+import { mapActions } from 'vuex'
 
 export default { 
   computed:{... mapState(['tokenStore','pseudoStore', 'idStore', 'mailStore']),
-    ... mapGetters(['CHANGE_PSEUDO'])
   },
 
   nape: "app",
@@ -64,6 +63,7 @@ export default {
   },
 
   methods: {
+    ... mapActions(['change_pseudo']),
     modifyAccount(){
       HTTP.defaults.headers.common['Authorization'] = `bearer ${this.tokenStore}`;
       HTTP.put('auth/modify', {
@@ -74,7 +74,7 @@ export default {
         }
       })
       .then(() =>{
-        this.$store.commit('CHANGE_PSEUDO',this.newPseudo);
+        this.$store.dispatch('change_pseudo',this.newPseudo);
         this.$router.push('/forum');
       })
       .catch(err =>{

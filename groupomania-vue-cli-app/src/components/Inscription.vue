@@ -30,13 +30,12 @@
 
 <script>
 import{HTTP} from '../http-constants'
-import {  mapGetters } from 'vuex'
 import { mapState } from 'vuex'
+import { mapActions } from 'vuex'
 
 export default{
   computed:{
     ... mapState(['tokenStore','pseudoStore', 'idStore', 'mailStore', 'statusStore']),
-    ... mapGetters(['NEW_USER'])
   },
 
   nape: "app",
@@ -50,6 +49,7 @@ export default{
   },
 
   methods: {
+    ... mapActions(['new_user']),
     inscription() {
       let inscriButton= document.getElementById('inscri-button'); 
       inscriButton.disabled= true;
@@ -67,8 +67,8 @@ export default{
           }
         })
         .then(response =>{
-          this.$store.commit("NEW_USER", response.data)
-          this.$router.push('/welcome')
+          this.$store.dispatch('new_user', response.data)
+          this.$router.push('/forum')
         })
         .catch(err => {
           document.getElementById('errorMsg').innerText = err;

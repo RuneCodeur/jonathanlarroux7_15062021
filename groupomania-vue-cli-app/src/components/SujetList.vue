@@ -49,13 +49,12 @@
 
 <script>
 import{ HTTP } from '../http-constants'
-import {  mapGetters } from 'vuex'
 import { mapState } from 'vuex'
+import { mapActions } from 'vuex'
 
 export default {
   computed:{
     ... mapState(['tokenStore', 'statusStore', 'idCanalStore', 'nameCanalStore', 'idSujetStore']),
-    ... mapGetters(['SELECT_SUJET', 'UNSELECT_SUJET'])
   }, 
 
   nape: "app",
@@ -87,9 +86,14 @@ export default {
   },
 
   methods: {
+    ... mapActions(['select_sujet']),
     goToSujet(id, name, creator){
-      let response = [id, name, creator]
-      this.$store.commit('SELECT_SUJET', response)
+      let response = {
+        idSujet: id,
+        nameSujet: name,
+        creatorSujet: creator,
+      }
+      this.$store.dispatch('select_sujet', response)
       this.$router.push({name: 'Sujet', params: {idCanal: this.idCanalStore, idSujet: this.idSujetStore}})
     },
 
@@ -120,7 +124,6 @@ export default {
       HTTP.defaults.headers.common['Authorization'] = `bearer ${this.tokenStore}`;
       HTTP.delete('/canal/'+ this.$route.params.idCanal +'/'+ id, formulaire)
       .then(() =>{
-        this.$store.commit('UNSELECT_SUJET')
         this.$router.push({name: 'Forum'})
       })
       .catch(err =>{

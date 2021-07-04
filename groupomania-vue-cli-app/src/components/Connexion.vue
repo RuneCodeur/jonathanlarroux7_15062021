@@ -27,13 +27,12 @@
 
 <script>
 import{HTTP} from '../http-constants'
-import {  mapGetters } from 'vuex'
 import { mapState } from 'vuex'
+import { mapActions } from 'vuex'
 
 export default{
   computed:{
     ... mapState(['token','pseudoData', 'id', 'mailData', 'status']),
-    ... mapGetters(['NEW_USER'])
   },
 
   nape: "app",
@@ -47,6 +46,7 @@ export default{
   },
 
   methods: {
+    ... mapActions(['new_user']),
     connection() {
       let connectButton = document.getElementById('connect-button');
       connectButton.disabled = true;
@@ -57,7 +57,7 @@ export default{
         }
       })
       .then(response =>{
-        this.$store.commit("NEW_USER", response.data)
+        this.$store.dispatch('new_user', response.data)
         this.$router.push('/forum')
       })
       .catch(err => {

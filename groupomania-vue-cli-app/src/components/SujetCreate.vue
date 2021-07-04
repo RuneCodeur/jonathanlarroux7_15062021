@@ -31,13 +31,11 @@
 
 <script>
 import{HTTP} from '../http-constants'
-import {  mapGetters } from 'vuex'
 import { mapState } from 'vuex'	
 
 export default{
   computed:{
     ... mapState(['tokenStore','pseudoStore', 'idStore', 'mailStore', 'statusStore']),
-    ... mapGetters(['NEW_USER'])
   },
 
   nape: "app",

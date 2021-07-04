@@ -46,7 +46,7 @@ import { mapState } from 'vuex'
 
 export default {
   computed:{
-    ... mapState(['tokenStore', 'pseudoStore', 'idStore', 'statusStore', 'idCanalStore', 'nameCanalStore', 'idSujetStore', 'nameSujetStore', 'creatorSujetStore']),
+    ... mapState(['tokenStore', 'pseudoStore', 'idStore', 'statusStore', 'idCanalStore', 'idSujetStore', 'nameSujetStore', 'creatorSujetStore']),
   }, 
 
   nape: "app",

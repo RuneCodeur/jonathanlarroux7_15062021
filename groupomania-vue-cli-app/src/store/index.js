@@ -14,45 +14,58 @@ export default createStore({
     creatorSujetStore:'',
   },
   mutations: {
-    NEW_USER(state, response){
+    value_user(state, response){
       state.tokenStore = response.token
       state.pseudoStore = response.pseudo
       state.idStore = response.id
       state.mailStore = response.mail
       state.statusStore = response.status
     },
-    CHANGE_PSEUDO(state, response){
-      state.pseudoStore = response
+    value_canal(state, response){
+      state.idCanalStore = response.idCanal
+      state.nameCanalStore = response.nameCanal
     },
-    DISCONNECT_USER(state){
-      state.tokenStore = ''
-      state.pseudoStore = ''
-      state.idStore = ''
-      state.mailStore = ''
-      state.statusStore = ''
-      state.idCanalStore = ''
-      state.idSujetStore = ''
-    },
-    SELECT_CANAL(state, response){
-      state.idCanalStore = response[0]
-      state.nameCanalStore = response[1]
-    },
-    UNSELECT_CANAL(state){
-      state.idCanalStore = ''
-      state.nameCanalStore = ''
-    },
-    SELECT_SUJET(state, response){
-      state.idSujetStore = response[0]
-      state.nameSujetStore = response[1]
-      state.creatorSujetStore = response[2]
-    },
-    UNSELECT_SUJET(state){
-      state.idSujetStore = ''
-      state.nameSujetStore = ''
-      state.creatorSujetStore = ''
+    value_sujet(state, response){
+      state.idSujetStore = response.idSujet
+      state.nameSujetStore = response.nameSujet
+      state.creatorSujetStore = response.creatorSujet
     },
   },
   actions: {
+    new_user(context, response){
+      context.commit('value_user', response)
+    },
+
+    disconnect_user(context){
+      let response = {
+        token: '',
+        pseudo: '',
+        id: '',
+        mail: '',
+        status: '',
+      }
+      context.commit('value_user', response)
+    },
+
+    select_canal(context, response){
+      context.commit('value_canal', response)
+    },
+
+    select_sujet(context, response){
+      context.commit('value_sujet', response)
+    },
+
+    change_pseudo(context, res){
+      let response = {
+        token: context.state.tokenStore,
+        pseudo: res,
+        id: context.state.idStore,
+        mail: context.state.mailStore,
+        status: context.state.statusStore,
+      }
+      context.commit('value_user', response)
+    }
+
   },
   modules: {
   }
