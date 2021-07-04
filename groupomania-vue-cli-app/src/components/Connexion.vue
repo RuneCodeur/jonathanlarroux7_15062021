@@ -61,7 +61,6 @@ export default{
         this.$router.push('/forum')
       })
       .catch(err => {
-        console.log(err.status)
         document.getElementById('errorMsg').innerText = err;
         connectButton.disabled = false;
       });

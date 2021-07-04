@@ -49,6 +49,12 @@ export default{
     }
   },
 
+  created() {
+    if(this.tokenStore ==''){
+      this.$router.push('/')
+    }
+  },
+  
   methods: {
     sujetCreation() {
       let buttonCreate= document.getElementById('button-create'); 

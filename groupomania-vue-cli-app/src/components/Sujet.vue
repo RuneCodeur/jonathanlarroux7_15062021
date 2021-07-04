@@ -61,12 +61,17 @@ export default {
     }
   },
 
-  mounted() {
-    HTTP.defaults.headers.common['Authorization'] = `bearer ${this.tokenStore}`;
-    HTTP.get('/messages/'+ this.$route.params.idCanal + '/' + this.$route.params.idSujet)
-    .then(response =>{
-      this.listMsg = response.data.response[0]
-    })
+  created() {
+    if(this.tokenStore ==''){
+      this.$router.push('/')
+    }
+    else{
+      HTTP.defaults.headers.common['Authorization'] = `bearer ${this.tokenStore}`;
+      HTTP.get('/messages/'+ this.$route.params.idCanal + '/' + this.$route.params.idSujet)
+      .then(response =>{
+        this.listMsg = response.data.response[0]
+      })
+    }
   },
 
   methods: {

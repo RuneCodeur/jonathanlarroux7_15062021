@@ -74,16 +74,20 @@ export default{
       nameChangeCanal:'',
     }
   },
-
-  mounted() {
-    HTTP.defaults.headers.common['Authorization'] = `bearer ${this.tokenStore}`;
-    HTTP.get('/canal/welcome')
-    .then(response =>{
-      this.listCanal = response.data.response[0]
-    })
-    .catch(err => {
-      document.getElementById('errorMsg').innerText = err;
-    });
+  created() {
+    if(this.tokenStore ==''){
+      this.$router.push('/')
+    }
+    else{
+      HTTP.defaults.headers.common['Authorization'] = `bearer ${this.tokenStore}`;
+      HTTP.get('/canal/welcome')
+      .then(response =>{
+        this.listCanal = response.data.response[0]
+      })
+      .catch(err => {
+        document.getElementById('errorMsg').innerText = err;
+      });
+    }
   },
 
   methods: {

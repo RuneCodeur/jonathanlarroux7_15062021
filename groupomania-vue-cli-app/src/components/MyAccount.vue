@@ -57,6 +57,12 @@ export default {
     }
   },
 
+  created() {
+    if(this.tokenStore ==''){
+      this.$router.push('/')
+    }
+  },
+
   methods: {
     modifyAccount(){
       HTTP.defaults.headers.common['Authorization'] = `bearer ${this.tokenStore}`;

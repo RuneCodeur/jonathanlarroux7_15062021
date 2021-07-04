@@ -37,11 +37,10 @@
         </fieldset>
       </form>
 
-      <router-link :to="{ name:`SujetCreate`, params: { idCanal: idCanalStore }}" class="mx-3" v-show="!showModif">nouveau sujet</router-link>
-      
       <div class="d-flex justify-content-center row mt-4 " >
       
-      <input type="button" class="m-1 col-6" value="supprimer/modifier un sujet" @click="showModif = !showModif" >
+        <input type="button" value="nouveau sujet" class="m-1 col-6" v-show="!showModif" @click="newSujet">
+        <input type="button" class="m-1 col-6" value="supprimer/modifier un sujet" @click="showModif = !showModif" >
       
       </div> 
     </div>
@@ -71,17 +70,22 @@ export default {
     }
   },
 
-  mounted() {
-    HTTP.defaults.headers.common['Authorization'] = `bearer ${this.tokenStore}`;
-    HTTP.get('/canal/'+ this.$route.params.idCanal)
-    .then(response =>{
-      this.listSujet = response.data.response[0]
-    })
-    .catch(err =>{
-      document.getElementById('errorMsg').innerText = err;
-    })
-
+  created() {
+    if(this.tokenStore ==''){
+      this.$router.push('/')
+    }
+    else{
+      HTTP.defaults.headers.common['Authorization'] = `bearer ${this.tokenStore}`;
+      HTTP.get('/canal/'+ this.$route.params.idCanal)
+      .then(response =>{
+        this.listSujet = response.data.response[0]
+      })
+      .catch(err =>{
+        document.getElementById('errorMsg').innerText = err;
+      })
+    }
   },
+
   methods: {
     goToSujet(id, name, creator){
       let response = [id, name, creator]
@@ -103,6 +107,10 @@ export default {
       .catch(err =>{
         document.getElementById('errorMsg').innerText = err;
       })
+    },
+
+    newSujet(){
+      this.$router.push({ name:`SujetCreate`, params: { idCanal: 'idCanalStore' }})
     },
 
     destroySujet(id){

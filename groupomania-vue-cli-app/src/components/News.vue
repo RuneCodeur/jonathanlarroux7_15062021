@@ -44,15 +44,20 @@ export default{
     }
   },
 
-  mounted() {
-    HTTP.defaults.headers.common['Authorization'] = `bearer ${this.tokenStore}`;
-    HTTP.get('/messages/New')
-    .then(response =>{
-      this.newMsg = response.data.response[0].reverse()
-    })
-    .catch(err=>{
-      document.getElementById('errorMsg').innerText = err;
-    })
+  created() {
+    if(this.tokenStore ==''){
+      this.$router.push('/')
+    }
+    else{
+      HTTP.defaults.headers.common['Authorization'] = `bearer ${this.tokenStore}`;
+      HTTP.get('/messages/New')
+      .then(response =>{
+        this.newMsg = response.data.response[0].reverse()
+      })
+      .catch(err=>{
+        document.getElementById('errorMsg').innerText = err;
+      })
+    }
   },
   
 }
