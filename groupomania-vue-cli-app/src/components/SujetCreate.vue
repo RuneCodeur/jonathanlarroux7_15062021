@@ -5,7 +5,7 @@
       <router-link to="/news" class="mx-3">news</router-link>
       <router-link to="/forum" class="mx-3">forum</router-link>
       <router-link to="/myAccount" class="mx-3">mon profil</router-link>
-      <router-link to="/" class="mx-3">me deconnecter</router-link>
+      <router-link to="/" class="mx-3" @click="disconnect_user()">me deconnecter</router-link>
     </nav>
     
     <div class="d-flex container flex-column text-center">
@@ -31,7 +31,8 @@
 
 <script>
 import{HTTP} from '../http-constants'
-import { mapState } from 'vuex'	
+import { mapState } from 'vuex'
+import { mapActions } from 'vuex'
 
 export default{
   computed:{
@@ -49,11 +50,19 @@ export default{
 
   created() {
     if(this.tokenStore ==''){
-      this.$router.push('/')
+      let userStorage = JSON.parse(localStorage.getItem('user'))
+      let positionStorage = JSON.parse(localStorage.getItem('position'))
+      this.$store.dispatch('new_user', userStorage);
+      this.$store.dispatch('select_sujet', positionStorage);
+      if(this.tokenStore ==''){
+        console.log(this.$store)
+        this.$router.push('/')
+      }
     }
   },
   
   methods: {
+    ... mapActions(['disconnect_user', 'select_sujet', 'new_user']),
     sujetCreation() {
       let buttonCreate= document.getElementById('button-create'); 
       buttonCreate.disabled = true;

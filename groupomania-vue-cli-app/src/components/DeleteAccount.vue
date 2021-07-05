@@ -5,7 +5,7 @@
       <router-link to="/news" class="mx-3">news</router-link>
       <router-link to="/forum" class="mx-3">forum</router-link>
       <router-link to="/myAccount" class="mx-3">mon profil</router-link>
-      <router-link to="/" class="mx-3">me deconnecter</router-link>
+      <router-link to="/" class="mx-3" @click="disconnect_user()">me deconnecter</router-link>
     </nav>
     <div ><div v-if="tokenStore !== ''"></div>
       <h2>suppression du compte</h2>
@@ -33,7 +33,12 @@ export default {
 
   created() {
     if(this.tokenStore ==''){
-      this.$router.push('/')
+      let userStorage = JSON.parse(localStorage.getItem('user'))
+      this.$store.dispatch('new_user', userStorage);
+      if(this.tokenStore ==''){
+        console.log(this.$store)
+        this.$router.push('/')
+      }
     }
   },
 
@@ -49,7 +54,7 @@ export default {
         }
       })
       .then(() =>{
-        this.$store.dispatch('disconnect_user');
+        this.$store.dispatch('disconnect_user', 'new_user');
         this.$router.push('/');
       })
       .catch(err =>{

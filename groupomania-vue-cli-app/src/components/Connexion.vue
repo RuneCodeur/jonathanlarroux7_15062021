@@ -45,6 +45,16 @@ export default{
     }
   },
 
+created() {
+    if(this.tokenStore !== '' && localStorage.getItem('user')){
+      let userStorage = JSON.parse(localStorage.getItem('user'))
+      this.$store.dispatch('new_user', userStorage);
+      if(this.tokenStore !== ''){
+        this.$router.push('/forum')
+      }
+    }
+  },
+
   methods: {
     ... mapActions(['new_user']),
     connection() {

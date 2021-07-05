@@ -49,7 +49,7 @@ export default{
   },
 
   methods: {
-    ... mapActions(['new_user']),
+    ... mapActions(['new_user','disconnect_user']),
     inscription() {
       let inscriButton= document.getElementById('inscri-button'); 
       inscriButton.disabled= true;
