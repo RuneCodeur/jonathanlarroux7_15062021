@@ -58,7 +58,7 @@ export default {
         this.$router.push('/');
       })
       .catch(err =>{
-        document.getElementById('errorMsg').innerText = err;
+        document.getElementById('errorMsg').innerText = err.response.data.error;
       })
     }
 

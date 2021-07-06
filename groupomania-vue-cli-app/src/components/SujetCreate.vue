@@ -80,7 +80,7 @@ export default{
       })
       .catch(err =>{
         buttonCreate.disabled = false;
-        document.getElementById('errorMsg').innerText = err;
+        document.getElementById('errorMsg').innerText = err.response.data.error;
       })
     },
 

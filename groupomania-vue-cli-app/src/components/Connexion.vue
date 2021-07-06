@@ -71,7 +71,7 @@ created() {
         this.$router.push('/forum')
       })
       .catch(err => {
-        document.getElementById('errorMsg').innerText = err;
+        document.getElementById('errorMsg').innerText = err.response.data.error;
         connectButton.disabled = false;
       });
     }

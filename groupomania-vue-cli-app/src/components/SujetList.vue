@@ -83,10 +83,10 @@ export default {
         HTTP.defaults.headers.common['Authorization'] = `bearer ${this.tokenStore}`;
         HTTP.get('/canal/'+ this.$route.params.idCanal)
         .then(response =>{
-          this.listSujet = response.data.response[0]
+          this.listSujet = response.data.row
         })
         .catch(err =>{
-          document.getElementById('errorMsg').innerText = err;
+          document.getElementById('errorMsg').innerText = err.response.data.error;
         })
       }
     }
@@ -94,10 +94,10 @@ export default {
       HTTP.defaults.headers.common['Authorization'] = `bearer ${this.tokenStore}`;
       HTTP.get('/canal/'+ this.$route.params.idCanal)
       .then(response =>{
-        this.listSujet = response.data.response[0]
+        this.listSujet = response.data.row
       })
       .catch(err =>{
-        document.getElementById('errorMsg').innerText = err;
+        document.getElementById('errorMsg').innerText = err.response.data.error;
       })
     }
   },
@@ -128,7 +128,7 @@ export default {
       this.$router.push({name: 'News'})
       })
       .catch(err =>{
-        document.getElementById('errorMsg').innerText = err;
+        document.getElementById('errorMsg').innerText = err.response.data.error;
       })
     },
 
@@ -146,7 +146,7 @@ export default {
         this.$router.push({name: 'Forum'})
       })
       .catch(err =>{
-        document.getElementById('errorMsg').innerText = err;
+        document.getElementById('errorMsg').innerText = err.response.data.error;
       })
     },
 

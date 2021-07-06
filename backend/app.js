@@ -3,7 +3,7 @@ const bodyParser = require('body-parser');
 const path = require('path');
 const helmet = require('helmet');
 const rateLimit = require("express-rate-limit");
-const connect = require('./connect');
+const connection = require('./connect');
 
 const messagesRoutes = require('./routes/message');
 const userRoutes = require('./routes/user');
@@ -15,12 +15,17 @@ const limiter = rateLimit({
 });
 
 //connection
-try {
-  connect.authenticate();
-  console.log('- - - Connecté à la base de données MySQL! - - -');
-} catch (error) {
-  console.error('Impossible de se connecter, erreur suivante :', error);
-}
+
+connection.query('select CURTIME();',
+function(err, result) {
+  if(result){
+  console.log('- - - il est '+result[0]['CURTIME()']+ ', et vous êtes connecté à la base de données MySQL ! - - -');
+  }
+  if(err){
+  console.log('Impossible de se connecter, erreur suivante : ', err);
+  }
+});
+
 
 //headers
 const app = express();

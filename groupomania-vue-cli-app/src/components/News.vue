@@ -57,10 +57,10 @@ export default{
         HTTP.defaults.headers.common['Authorization'] = `bearer ${this.tokenStore}`;
         HTTP.get('/messages/New')
         .then(response =>{
-          this.newMsg = response.data.response[0].reverse()
+          this.newMsg = response.data.row.reverse()
         })
         .catch(err=>{
-          document.getElementById('errorMsg').innerText = err;
+          document.getElementById('errorMsg').innerText = err.response.data.error;
         })
       }
     }
@@ -68,10 +68,10 @@ export default{
       HTTP.defaults.headers.common['Authorization'] = `bearer ${this.tokenStore}`;
       HTTP.get('/messages/New')
       .then(response =>{
-        this.newMsg = response.data.response[0].reverse()
+        this.newMsg = response.data.row.reverse()
       })
       .catch(err=>{
-        document.getElementById('errorMsg').innerText = err;
+        document.getElementById('errorMsg').innerText = err.response.data.error;
       })
     }
   },

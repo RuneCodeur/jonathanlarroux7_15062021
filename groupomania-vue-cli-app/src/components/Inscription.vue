@@ -71,12 +71,12 @@ export default{
           this.$router.push('/forum')
         })
         .catch(err => {
-          document.getElementById('errorMsg').innerText = err;
+          document.getElementById('errorMsg').innerText = err.response.data.error;
           inscriButton.disabled = false;
         });
       })
       .catch(err => {
-        document.getElementById('errorMsg').innerText = err;
+        document.getElementById('errorMsg').innerText = err.response.data.error;
         inscriButton.disabled= false;
       });
     }

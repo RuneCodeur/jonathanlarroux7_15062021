@@ -85,10 +85,10 @@ export default{
         HTTP.defaults.headers.common['Authorization'] = `bearer ${this.tokenStore}`;
         HTTP.get('/canal/welcome')
         .then(response =>{
-          this.listCanal = response.data.response[0]
+          this.listCanal = response.data.row
         })
         .catch(err => {
-          document.getElementById('errorMsg').innerText = err;
+          document.getElementById('errorMsg').innerText = err.response.data.error;
         });
       }
     }
@@ -96,10 +96,10 @@ export default{
       HTTP.defaults.headers.common['Authorization'] = `bearer ${this.tokenStore}`;
       HTTP.get('/canal/welcome')
       .then(response =>{
-        this.listCanal = response.data.response[0]
+        this.listCanal = response.data.row
       })
       .catch(err => {
-        document.getElementById('errorMsg').innerText = err;
+        document.getElementById('errorMsg').innerText = err.response.data.error;
       });
     }
   },
@@ -116,7 +116,7 @@ export default{
         this.$router.go('/forum')
       })
       .catch(err => {
-        document.getElementById('errorMsg').innerText = err;
+        document.getElementById('errorMsg').innerText = err.response.data.error;
       });
     },
 
@@ -140,7 +140,7 @@ export default{
       this.$router.push({name: 'News'})
       })
       .catch(err => {
-        document.getElementById('errorMsg').innerText = err;
+        document.getElementById('errorMsg').innerText = err.response.data.error;
       });
     },
 
@@ -154,7 +154,7 @@ export default{
         this.$router.push({name: 'News'})
       })
       .catch(err => {
-        document.getElementById('errorMsg').innerText = err;
+        document.getElementById('errorMsg').innerText = err.response.data.error;
       });
     },
 

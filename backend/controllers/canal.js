@@ -1,26 +1,25 @@
-
+const connection = require('../connect');
 let regex = new RegExp("^[A-Za-z-éèêëçàâùï€$£_'.;:,@?!()\n 0-9]+$");
 
-const connect = require('../connect')
 
-//obtient la liste de tout les canaux -- ok 
+//obtient la liste de tout les canaux
 exports.getAllCanal= (req, res) => {
-  connect.query("SELECT * FROM list_canal;")
-  .then(response => res.status(200).json({response}))
-  .catch(error => res.status(500).json({error}));
+  connection.promise().query("SELECT * FROM list_canal;")
+  .then(([row, fields]) =>{res.status(200).json({row})})
+  .catch(error => res.status(500).json({error}))
 };
 
 //obtient la liste de tout les sujet suivant le canal choisi -- ok
 exports.getAllSujet= (req, res) => {
-  connect.query("SELECT id, nom_sujet, id_creator, pseudo_creator FROM list_sujet WHERE position_canal = " + req.params.idCanal + ";")
-  .then(response => res.status(200).json({response}))
+  connection.promise().query("SELECT id, nom_sujet, id_creator, pseudo_creator FROM list_sujet WHERE position_canal = " + req.params.idCanal + ";")
+  .then(([row, fields]) =>{res.status(200).json({row})})
   .catch(error => res.status(500).json({error}));
 };
 
-//crée un canal --ok 
+//crée un canal
 exports.createCanal= (req, res) => {
   if((regex.test(req.body.params.canalName) === true)){
-    connect.query("INSERT INTO list_canal SET nom_canal='" + req.body.params.canalName + "';")
+    connection.promise().query("INSERT INTO list_canal SET nom_canal='" + req.body.params.canalName + "';")
     .then(() => res.status(200).json({ message: "nouveau canal crée !"}))
     .catch(error => res.status(500).json({error}));
   }else{
@@ -31,15 +30,15 @@ exports.createCanal= (req, res) => {
 //creer un sujet avec un message -- ok 
 exports.createSujet= (req, res) => {
   if((regex.test(req.body.sujetName) === true) && (regex.test(req.body.pseudo) === true) && (regex.test(req.body.msg) === true)){
-    connect.query("SET autocommit=0;")
+    connection.promise().query("SET autocommit=0;")
     .then(() => {
-      connect.query("INSERT INTO list_sujet SET nom_sujet='" + req.body.sujetName.replace("'", "''") + "', position_canal= " + req.body.idCanal + ", id_creator= " + req.body.id + ", pseudo_creator= '" + req.body.pseudo + "';")
+      connection.promise().query("INSERT INTO list_sujet SET nom_sujet='" + req.body.sujetName.replace("'", "''") + "', position_canal= " + req.body.idCanal + ", id_creator= " + req.body.id + ", pseudo_creator= '" + req.body.pseudo + "';")
       .then(() => {
-      connect.query("INSERT INTO list_msg SET id_user=" + req.body.id + ", name_user= '" + req.body.pseudo + "', message='" + req.body.msg.replace("'", "''") + "', date=NOW(), position_canal=" + req.body.idCanal+ ", position_sujet= ( SELECT id FROM list_sujet ORDER BY id DESC LIMIT 0,1 );")
+      connection.promise().query("INSERT INTO list_msg SET id_user=" + req.body.id + ", name_user= '" + req.body.pseudo + "', message='" + req.body.msg.replace("'", "''") + "', date=NOW(), position_canal=" + req.body.idCanal+ ", position_sujet= ( SELECT id FROM list_sujet ORDER BY id DESC LIMIT 0,1 );")
       .then(() => {
-        connect.query("COMMIT;")
+        connection.promise().query("COMMIT;")
         .then(() => {
-          connect.query("SET autocommit=1;")
+          connection.promise().query("SET autocommit=1;")
           .then(() => res.status(200).json({ message: "nouveau sujet crée !"}))
           .catch(error => res.status(500).json({error}));
         })
@@ -59,7 +58,7 @@ exports.createSujet= (req, res) => {
 //modifie le nom d'un canal --ok 
 exports.modifyCanal= (req, res) => {
   if((regex.test(req.body.canalName) === true)){
-    connect.query("UPDATE list_canal SET nom_canal='" + req.body.canalName + "' WHERE id=" + req.body.canalId + ";")
+    connection.promise().query("UPDATE list_canal SET nom_canal='" + req.body.canalName + "' WHERE id=" + req.body.canalId + ";")
     .then(() => res.status(200).json({ message: "nouveau canal crée !"}))
     .catch(error => res.status(500).json({error}));
   }else{
@@ -69,9 +68,8 @@ exports.modifyCanal= (req, res) => {
 
 //modifie le nom d'un sujet -- ok
 exports.modifySujet= (req, res) => {
-  console.log(req.body)
   if((regex.test(req.body.sujetName) === true)){
-    connect.query("UPDATE list_sujet SET nom_sujet='" + req.body.sujetName.replace("'", "''") + "' WHERE id=" + req.body.sujetId + ";")
+    connection.promise().query("UPDATE list_sujet SET nom_sujet='" + req.body.sujetName.replace("'", "''") + "' WHERE id=" + req.body.sujetId + ";")
     .then(() => res.status(200).json({ message: "le sujet à changé de nom !"}))
     .catch(error => res.status(500).json({error}));
   }else{
@@ -82,7 +80,7 @@ exports.modifySujet= (req, res) => {
 //supprime un canal --ok
 exports.deleteCanal= (req, res) => {
   if((regex.test(req.body.canalName) === true)){
-    connect.query("DELETE FROM list_canal WHERE id=" + req.params.idCanal + ";")
+    connection.promise().query("DELETE FROM list_canal WHERE id=" + req.params.idCanal + ";")
     .then(() => res.status(200).json({ message: "canal supprimé !"}))
     .catch(error => res.status(500).json({error}));
   }else{
@@ -92,7 +90,7 @@ exports.deleteCanal= (req, res) => {
 
 //supprime un sujet -- ok
 exports.deleteSujet= (req, res) => {
-    connect.query("DELETE FROM list_sujet WHERE id=" + req.params.idSujet + ";")
+    connection.promise().query("DELETE FROM list_sujet WHERE id=" + req.params.idSujet + ";")
     .then(() => res.status(200).json({ message: "sujet supprimé !"}))
     .catch(error => res.status(500).json({error}));
 };

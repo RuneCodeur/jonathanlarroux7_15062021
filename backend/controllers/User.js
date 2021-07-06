@@ -1,15 +1,16 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const connect = require('../connect')
+const connection = require('../connect');
 let regex = new RegExp("^[A-Za-z-_ 0-9]+$");
 let mailRegex = new RegExp("^[A-Za-z-_ 0-9.]+@([A-Za-z-_ 0-9-]+\.)+[A-Za-z]$");
 
-//crée un nouveau compte utilisateur -- ok
+//crée un nouveau compte utilisateur
 exports.signup = (req, res) => {
   if ((regex.test(req.body.mdp) === true) && (mailRegex.test(req.body.mail) === true) && (regex.test(req.body.pseudo) === true)){
+    console.log(req.body.mdp)
     bcrypt.hash(req.body.mdp, 10)
     .then(hash =>{
-      connect.query("INSERT INTO users SET pseudo ='" + req.body.pseudo + "', mail='" + req.body.mail + "', mdp='" + hash + "';")
+      connection.promise().query("INSERT INTO users SET pseudo ='" + req.body.pseudo + "', mail='" + req.body.mail + "', mdp='" + hash + "';")
       .then(() => {
         return res.status(200).json({ message: "utilisateur crée !" });
       })
@@ -21,15 +22,14 @@ exports.signup = (req, res) => {
   }
 };
 
-//connecte un utilisateur à son compte. -- ok
+//connecte un utilisateur à son compte
 exports.login = (req, res) => {
   if ((regex.test(req.query.mdp) === true) && (mailRegex.test(req.query.mail) === true)){
-    connect.query("SELECT * FROM users WHERE mail='" + req.query.mail + "' LIMIT 1;")
-    .then(e => {
-      let response= e[1][0]
+    connection.promise().query("SELECT * FROM users WHERE mail='" + req.query.mail + "' LIMIT 1;")
+    .then(([row, fields]) =>{
+      let response= row[0]
       bcrypt.compare(req.query.mdp, response.mdp, function(err, result){
         if(result === true){
-          console.log('utilisateur connecté !')
           res.status(200).json({
           id: response.id,
           status: response.status,
@@ -48,7 +48,6 @@ exports.login = (req, res) => {
       })
     }).catch(() => res.status(405).json({ error: "utilisateur introuvable." }));
   }else {
-    console.log("caractère non autorisé.")
     return res.status(405).json({ error: "caractère non autorisé." });
   }
 };
@@ -56,7 +55,7 @@ exports.login = (req, res) => {
 //modifie un utilisateur -- ok ?
 exports.modify = (req, res) =>{
   if((regex.test(req.body.params.newPseudo) === true) && (mailRegex.test(req.body.params.mail) === true)){ 
-    connect.query("UPDATE users SET pseudo = '" + req.body.params.newPseudo + "' WHERE id =" + req.body.params.id + " AND mail ='" + req.body.params.mail + "';")
+    connection.promise().query("UPDATE users SET pseudo = '" + req.body.params.newPseudo + "' WHERE id =" + req.body.params.id + " AND mail ='" + req.body.params.mail + "';")
     .then(() => res.status(200).json({ message: "pseudo de l'utilisateur modifié !"}))
     .catch(() => res.status(500).json({ error: "action non autorisé." }));
   }else{
@@ -67,7 +66,7 @@ exports.modify = (req, res) =>{
 //supprime le compte utilisateur -- ok 
 exports.delete = (req, res) =>{
   if((mailRegex.test(req.query.mail) === true) && (regex.test(req.query.pseudo) === true)){ 
-  connect.query ("DELETE FROM users WHERE mail='" + req.query.mail + "' AND id=" + req.query.id + " AND pseudo='" + req.query.pseudo + "';")
+  connection.promise().query ("DELETE FROM users WHERE mail='" + req.query.mail + "' AND id=" + req.query.id + " AND pseudo='" + req.query.pseudo + "';")
     .then(() => res.status(200).json({ message: "utilisateur supprimé !"}))
     .catch(() => res.status(500).json({ error: "action non autorisé." }));
   }else{
