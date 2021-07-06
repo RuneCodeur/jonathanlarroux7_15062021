@@ -16,7 +16,7 @@
 
         <div class="fs-3 my-2 row col-12" v-for="canal in listCanal" :key="canal.id">
           <div class="col-1"></div>
-          <div @click="goToCanal(canal.id, canal.nom_canal)" class="text-decoration-none text-white card col-10 p-2 bg-success fs-5">
+          <div @click="goToCanal(canal.id, canal.nom_canal)" class="col-10 p-2 btn btn-success fs-5">
           {{canal.nom_canal}}
           </div>
           <div class="col-1 d-flex flex-column p-0 fs-6 justify-content-around">
@@ -28,11 +28,11 @@
       
       <div id="errorMsg" class="text-danger"></div>
 
-      <div class="d-flex justify-content-center row mt-4">
+      <div class="d-flex justify-content-center row mt-4" v-if=" statusStore === 1">
         <input type="button" class="m-1 col-6" value="ajouter un forum" @click="showAddForum = !showAddForum" v-show="showAddForum - showModif">
       <form class="d-flex justify-content-center row " method="post">
 
-        <fieldset class="text-center my-4" v-show="!showAddForum">
+        <fieldset class="text-center my-4" v-show="!showAddForum" >
            <label for="title" class=""> titre du forum: </label>
           <input type="text" name="title" placeholder="titre du forum" class="m-2 col-6" v-model="canalName">
           <input type="button" value="ajouter" class="col-3" @click="newForum" >

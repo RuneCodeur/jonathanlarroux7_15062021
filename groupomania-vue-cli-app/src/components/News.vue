@@ -14,7 +14,7 @@
 
       <div class="d-flex align-items-center flex-column">
         
-        <div class="text-decoration-none text-dark card col-10 my-2 text-start border border-primary" v-for="msg in newMsg" :key="msg.id">
+        <div class="btn btn-white col-10 my-2 text-start border border-primary" @click="selectMessage(msg.position_canal, msg.position_sujet)" v-for="msg in newMsg" :key="msg.id">
           <div class="border-bottom border-secondary p-1 mb-4">
             <div class="fw-bold fs-5">{{msg.name_user}}</div>
             <div class="fst-italic px-3">le {{msg.date}}</div>
@@ -78,6 +78,14 @@ export default{
 
   methods: {
     ... mapActions(['disconnect_user', 'new_user']),
+    selectMessage(idCanal, idSujet){
+      let response = {
+        idCanal: idCanal,
+        idSujet: idSujet,
+      }
+      this.$store.dispatch('select_sujet', response)
+      this.$router.push({name: 'Sujet', params: {idCanal: idCanal, idSujet: idSujet}})
+    },
   },
 
 }

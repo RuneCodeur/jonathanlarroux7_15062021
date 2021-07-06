@@ -16,14 +16,14 @@
         <div class="col-4 border">auteur du sujet</div>
       </div>
       <div class="my-1 d-flex row col-12" v-for="sujet in listSujet" :key="sujet.id">
-        <div @click="goToSujet(sujet.id, sujet.nom_sujet, sujet.pseudo_creator)" class="text-decoration-none text-dark row col-11 m-0 p-0 ">
-          <div class="col-8 border d-flex flex-column justify-content-around"> {{ sujet.nom_sujet }} </div>
-          <div class="col-4 border d-flex flex-column justify-content-around"> {{ sujet.pseudo_creator }} </div> 
+        <div @click="goToSujet(sujet.id, sujet.nom_sujet, sujet.pseudo_creator)" class="btn btn-secondary d-flex row col-11 m-0 p-0 ">
+          <div class="col-8 border d-flex flex-column justify-content-around p-3"> {{ sujet.nom_sujet }} </div>
+          <div class="col-4 border d-flex flex-column justify-content-around p-3"> {{ sujet.pseudo_creator }} </div> 
       </div>
 
-          <div class="col-1 d-flex flex-column p-0 fs-6 justify-content-around">
+          <div class="col-1 d-flex flex-column p-0 fs-6 justify-content-around" v-if="sujet.id_creator === idStore || statusStore === 1">
             <i class="fas fa-cog btn-warning py-2" v-show="showModif" @click="showChangeNameSujet = !showChangeNameSujet; idChangeSujet= sujet.id, nameChangeSujet=sujet.nom_sujet"></i>
-            <i class="fas fa-trash-alt btn-danger py-2" v-show="showModif" @click="destroySujet(sujet.id)"></i>
+            <i class="fas fa-trash-alt btn-danger py-1" v-show="showModif" @click="destroySujet(sujet.id)"></i>
           </div>
       </div>
       
@@ -54,7 +54,7 @@ import { mapActions } from 'vuex'
 
 export default {
   computed:{
-    ... mapState(['tokenStore', 'statusStore', 'idCanalStore', 'nameCanalStore', 'idSujetStore']),
+    ... mapState(['tokenStore', 'idStore', 'statusStore', 'idCanalStore', 'nameCanalStore', 'idSujetStore']),
   }, 
 
   nape: "app",
@@ -133,7 +133,7 @@ export default {
     },
 
     newSujet(){
-      this.$router.push({ name:`SujetCreate`, params: { idCanal: 'idCanalStore' }})
+      this.$router.push({ name:`SujetCreate`, params: { idCanal: this.idCanalStore }})
     },
 
     destroySujet(id){

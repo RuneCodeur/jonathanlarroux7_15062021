@@ -20,11 +20,14 @@
             <div class="fw-bold fs-5">{{msg.name_user}}</div>
             <div class="row m-0"> 
               <div class="fst-italic p-0 col-8 border"> le {{msg.date}}</div>
-            <i class="fas fa-cog btn-warning py-2 col-2 text-center" @click="modifyMsgId = msg.id, modifyMsgValue = msg.message, showModify = !showModify" v-show="showModify"></i>
-            <i class="fas fa-trash-alt btn-danger py-2 col-2 text-center" @click="destroyMsg(msg.id)" v-show="showModify"></i>
+              <div class="col-4" v-if="msg.id_user === idStore || statusStore === 1">
+                <i class="fas fa-cog btn-warning py-2 col-6 text-center" @click="modifyMsgId = msg.id, modifyMsgValue = msg.message, showModify = !showModify" v-show="showModify"></i>
+                <i class="fas fa-trash-alt btn-danger py-2 col-6 text-center" @click="destroyMsg(msg.id)" v-show="showModify"></i>
+              </div>
+            
             </div>
           </div>
-          <div class="p-0 card" v-if="modifyMsgId === msg.id">
+          <div class="p-0 card" v-if="modifyMsgId === msg.id ">
             <textarea class="m-0 p-2 pt-4" v-model="modifyMsgValue"></textarea>
             <input class="m-0" type="button" value="modifier le message" @click="modifyMsg()">
           </div>

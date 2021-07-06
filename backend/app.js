@@ -8,6 +8,7 @@ const connection = require('./connect');
 const messagesRoutes = require('./routes/message');
 const userRoutes = require('./routes/user');
 const canalRoutes = require('./routes/canal');
+const { Console } = require('console');
 
 const limiter = rateLimit({
   windowMs: 60 * 1000, 
@@ -16,7 +17,7 @@ const limiter = rateLimit({
 
 //connection
 
-connection.query('select CURTIME();',
+connection.query("select CURTIME();",
 function(err, result) {
   if(result){
   console.log('- - - il est '+result[0]['CURTIME()']+ ', et vous êtes connecté à la base de données MySQL ! - - -');

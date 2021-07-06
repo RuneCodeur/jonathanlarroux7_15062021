@@ -12,12 +12,13 @@
     <div class="d-flex container flex-column">
 
       <h2 class="text-center">mon compte</h2>
+        <div id="successMsg" class="alert-success text-center"></div>
+        <div id="errorMsg" class="alert-danger text-center"></div>
 
       <div v-if="tokenStore !== ''">
         <div class="d-flex mt-4 align-items-center"> connecté en tant que: <div class="mx-2 fw-bold fs-5 d-flex"> {{$store.state.pseudoStore}} </div></div>
         <input type="button" value="changer de pseudo" class="mt-2 col-6" @click="showPseudo = !showPseudo" v-show="showPseudo">
       
-        <div id="errorMsg" class="text-danger"></div>
         
         <form method="post" v-show="!showPseudo">
           <fieldset class="my-4">
@@ -80,7 +81,7 @@ export default {
       })
       .then(() =>{
         this.$store.dispatch('change_pseudo',this.newPseudo);
-        this.$router.push('/forum');
+        document.getElementById('successMsg').innerText = "votre pseudo à été mis à jour ! ";
       })
       .catch(err =>{
         document.getElementById('errorMsg').innerText = err.response.data.error;

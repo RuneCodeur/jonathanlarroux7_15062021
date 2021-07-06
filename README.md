@@ -52,3 +52,13 @@ routes
 informations suplémentaire
 -en cours-
 
+modifier backend AUTH pour que si tu es un modo, tu peux modifer tout les messages/sujet que tu veux/creer des canaux
+placer des index dans sql
+placer des iner join dans les commandes sql
+supprimer le mail dans la gestion d'info
+ajuster les regex
+ajuster la gestion des erreurs du front
+placer des regex sur le front
+modifier bootstrap pour le rendre responsive
+integrer l'ajout de fichier
+integrer l'utilisation de gify
