@@ -66,27 +66,24 @@ export default {
   },
 
   created() {
-    if(this.tokenStore ==''){
+    if(this.tokenStore == ''){
+      if(localStorage.getItem('user')){
       let userStorage = JSON.parse(localStorage.getItem('user'))
       let positionStorage = JSON.parse(localStorage.getItem('position'))
       this.$store.dispatch('new_user', userStorage);
       this.$store.dispatch('select_sujet', positionStorage);
-      if(this.tokenStore ==''){
-        console.log(this.$store)
+      HTTP.defaults.headers.common['Authorization'] = `bearer ${this.tokenStore}`;
+      HTTP.get('/messages/'+ this.$route.params.idCanal + '/' + this.$route.params.idSujet)
+      .then(response =>{
+        this.listMsg = response.data.row
+      })
+      .catch(err =>{
+        document.getElementById('errorMsg').innerText = err.response.data.error;
+      })
+      }else{
         this.$router.push('/')
       }
-      else{
-        HTTP.defaults.headers.common['Authorization'] = `bearer ${this.tokenStore}`;
-        HTTP.get('/messages/'+ this.$route.params.idCanal + '/' + this.$route.params.idSujet)
-        .then(response =>{
-          this.listMsg = response.data.row
-        })
-        .catch(err =>{
-          document.getElementById('errorMsg').innerText = err.response.data.error;
-        })
-      }
-    }
-    else{
+    }else{
       HTTP.defaults.headers.common['Authorization'] = `bearer ${this.tokenStore}`;
       HTTP.get('/messages/'+ this.$route.params.idCanal + '/' + this.$route.params.idSujet)
       .then(response =>{

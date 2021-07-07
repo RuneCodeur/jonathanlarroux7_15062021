@@ -69,6 +69,38 @@ export default {
     }
   },
 
+  
+  created() {
+    if(this.tokenStore == ''){
+      if(localStorage.getItem('user')){
+        let userStorage = JSON.parse(localStorage.getItem('user'))
+        let positionStorage = JSON.parse(localStorage.getItem('position'))
+        this.$store.dispatch('new_user', userStorage);
+        this.$store.dispatch('select_sujet', positionStorage);
+        HTTP.defaults.headers.common['Authorization'] = `bearer ${this.tokenStore}`;
+        HTTP.get('/canal/'+ this.$route.params.idCanal)
+        .then(response =>{
+          this.listSujet = response.data.row
+        })
+        .catch(err =>{
+          document.getElementById('errorMsg').innerText = err.response.data.error;
+        })
+      }else{
+        this.$router.push('/')
+      }
+    }else{
+      HTTP.defaults.headers.common['Authorization'] = `bearer ${this.tokenStore}`;
+      HTTP.get('/canal/'+ this.$route.params.idCanal)
+      .then(response =>{
+        this.listSujet = response.data.row
+      })
+      .catch(err =>{
+        document.getElementById('errorMsg').innerText = err.response.data.error;
+      })
+    }
+  },
+
+/*
   created() {
     if(this.tokenStore ==''){
       let userStorage = JSON.parse(localStorage.getItem('user'))
@@ -100,7 +132,7 @@ export default {
         document.getElementById('errorMsg').innerText = err.response.data.error;
       })
     }
-  },
+  },*/
 
   methods: {
     ... mapActions(['select_sujet','disconnect_user', 'new_user',]),

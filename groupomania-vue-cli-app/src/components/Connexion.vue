@@ -45,11 +45,17 @@ export default{
     }
   },
 
-created() {
-    if(this.tokenStore !== '' && localStorage.getItem('user')){
-      let userStorage = JSON.parse(localStorage.getItem('user'))
-      this.$store.dispatch('new_user', userStorage);
-      if(this.tokenStore !== ''){
+  created() {
+    if(this.tokenStore == ''){ //si j'ai un store
+      if(localStorage.getItem('user')){ //et un localstorage
+        this.$router.push('/forum')
+      }else{ //mais pas de localstorage
+        this.$store.dispatch('disconnect_user');
+      }
+    }else{ //si pas de store
+      if(localStorage.getItem('user')){ //MAIS un localstorage
+        let userStorage = JSON.parse(localStorage.getItem('user'))
+        this.$store.dispatch('new_user', userStorage)
         this.$router.push('/forum')
       }
     }

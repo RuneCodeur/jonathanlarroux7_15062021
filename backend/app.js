@@ -8,7 +8,6 @@ const connection = require('./connect');
 const messagesRoutes = require('./routes/message');
 const userRoutes = require('./routes/user');
 const canalRoutes = require('./routes/canal');
-const { Console } = require('console');
 
 const limiter = rateLimit({
   windowMs: 60 * 1000, 

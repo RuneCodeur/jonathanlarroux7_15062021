@@ -73,15 +73,13 @@ export default{
       nameChangeCanal:'',
     }
   },
+
   created() {
-    if(this.tokenStore ==''){
+    if(this.tokenStore == ''){
+      if(localStorage.getItem('user')){
       let userStorage = JSON.parse(localStorage.getItem('user'))
       this.$store.dispatch('new_user', userStorage);
-      if(this.tokenStore ==''){
-        console.log(this.$store)
-        this.$router.push('/')
-      }
-      else{
+
         HTTP.defaults.headers.common['Authorization'] = `bearer ${this.tokenStore}`;
         HTTP.get('/canal/welcome')
         .then(response =>{
@@ -90,9 +88,12 @@ export default{
         .catch(err => {
           document.getElementById('errorMsg').innerText = err.response.data.error;
         });
+
+      }else{
+        this.$router.push('/')
       }
-    }
-    else{
+    }else{
+
       HTTP.defaults.headers.common['Authorization'] = `bearer ${this.tokenStore}`;
       HTTP.get('/canal/welcome')
       .then(response =>{
@@ -101,6 +102,7 @@ export default{
       .catch(err => {
         document.getElementById('errorMsg').innerText = err.response.data.error;
       });
+
     }
   },
 

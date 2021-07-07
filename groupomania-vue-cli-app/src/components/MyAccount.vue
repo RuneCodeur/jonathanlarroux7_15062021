@@ -58,11 +58,11 @@ export default {
   },
 
   created() {
-    if(this.tokenStore ==''){
+    if(this.tokenStore == ''){
+      if(localStorage.getItem('user')){
       let userStorage = JSON.parse(localStorage.getItem('user'))
       this.$store.dispatch('new_user', userStorage);
-      if(this.tokenStore ==''){
-        console.log(this.$store)
+      }else{
         this.$router.push('/')
       }
     }

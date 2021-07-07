@@ -47,6 +47,23 @@ export default{
       mail:''
     }
   },
+  
+
+  created() {
+    if(this.tokenStore == ''){ //si j'ai un store
+      if(localStorage.getItem('user')){ //et un localstorage
+        this.$router.push('/forum')
+      }else{ //mais pas de localstorage
+        this.$store.dispatch('disconnect_user');
+      }
+    }else{ //si pas de store
+      if(localStorage.getItem('user')){ //MAIS un localstorage
+        let userStorage = JSON.parse(localStorage.getItem('user'))
+        this.$store.dispatch('new_user', userStorage)
+        this.$router.push('/forum')
+      }
+    }
+  },
 
   methods: {
     ... mapActions(['new_user','disconnect_user']),

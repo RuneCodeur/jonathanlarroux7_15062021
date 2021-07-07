@@ -54,6 +54,9 @@ informations suplémentaire
 
 modifier backend AUTH pour que si tu es un modo, tu peux modifer tout les messages/sujet que tu veux/creer des canaux
 placer des index dans sql
+verifier les routes pour la recharge
+rajouter des return sur la route creer un sujet
+modifier les routes du front
 placer des iner join dans les commandes sql
 supprimer le mail dans la gestion d'info
 ajuster les regex

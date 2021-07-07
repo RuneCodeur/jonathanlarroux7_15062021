@@ -44,32 +44,29 @@ export default{
       newMsg:'',
     }
   },
-
+  
   created() {
-    if(this.tokenStore ==''){
+    if(this.tokenStore == ''){
+      if(localStorage.getItem('user')){
       let userStorage = JSON.parse(localStorage.getItem('user'))
       this.$store.dispatch('new_user', userStorage);
-      if(this.tokenStore ==''){
-        console.log(this.$store)
-        this.$router.push('/')
-      }
-      else{
-        HTTP.defaults.headers.common['Authorization'] = `bearer ${this.tokenStore}`;
-        HTTP.get('/messages/New')
-        .then(response =>{
-          this.newMsg = response.data.row.reverse()
-        })
-        .catch(err=>{
-          document.getElementById('errorMsg').innerText = err.response.data.error;
-        })
-      }
-    }
-    else{
       HTTP.defaults.headers.common['Authorization'] = `bearer ${this.tokenStore}`;
       HTTP.get('/messages/New')
       .then(response =>{
         this.newMsg = response.data.row.reverse()
       })
+      .catch(err=>{
+        document.getElementById('errorMsg').innerText = err.response.data.error;
+      })
+      }else{
+        this.$router.push('/')
+      }
+    }else{
+      HTTP.defaults.headers.common['Authorization'] = `bearer ${this.tokenStore}`;
+      HTTP.get('/messages/New')
+      .then(response =>{
+        this.newMsg = response.data.row.reverse()
+       })
       .catch(err=>{
         document.getElementById('errorMsg').innerText = err.response.data.error;
       })

@@ -32,11 +32,11 @@ export default {
   nape: "app",
 
   created() {
-    if(this.tokenStore ==''){
+    if(this.tokenStore == ''){
+      if(localStorage.getItem('user')){
       let userStorage = JSON.parse(localStorage.getItem('user'))
       this.$store.dispatch('new_user', userStorage);
-      if(this.tokenStore ==''){
-        console.log(this.$store)
+      }else{
         this.$router.push('/')
       }
     }
@@ -54,7 +54,7 @@ export default {
         }
       })
       .then(() =>{
-        this.$store.dispatch('disconnect_user', 'new_user');
+        this.$store.dispatch('disconnect_user');
         this.$router.push('/');
       })
       .catch(err =>{

@@ -49,15 +49,16 @@ export default{
   },
 
   created() {
-    if(this.tokenStore ==''){
+    if(this.tokenStore == ''){
+      if(localStorage.getItem('user')){
       let userStorage = JSON.parse(localStorage.getItem('user'))
-      let positionStorage = JSON.parse(localStorage.getItem('position'))
       this.$store.dispatch('new_user', userStorage);
-      this.$store.dispatch('select_sujet', positionStorage);
-      if(this.tokenStore ==''){
-        console.log(this.$store)
+      console.log('je fait un appel pour recevoir le nom du canal en utilisant this.$route.params.idCanal')
+      }else{
         this.$router.push('/')
       }
+    }else{
+      console.log('je fait un appel pour recevoir le nom du canal en me servant de this.$route.params.idCanal')
     }
   },
   

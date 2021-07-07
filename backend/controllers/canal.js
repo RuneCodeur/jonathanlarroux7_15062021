@@ -32,8 +32,9 @@ exports.createSujet= (req, res) => {
   if((regex.test(req.body.sujetName) === true) && (regex.test(req.body.pseudo) === true) && (regex.test(req.body.msg) === true)){
     connection.promise().query("SET autocommit=0;")
     .then(() => {
-      connection.promise().query("INSERT INTO list_sujet SET nom_sujet='" + req.body.sujetName.replace("'", "''") + "', position_canal= " + req.body.idCanal + ", id_creator= " + req.body.id + ", pseudo_creator= '" + req.body.pseudo + "';")
-      .then(() => {
+      return connection.promise().query("INSERT INTO list_sujet SET nom_sujet='" + req.body.sujetName.replace("'", "''") + "', position_canal= " + req.body.idCanal + ", id_creator= " + req.body.id + ", pseudo_creator= '" + req.body.pseudo + "';")
+    })
+    .then(() => {
       connection.promise().query("INSERT INTO list_msg SET id_user=" + req.body.id + ", name_user= '" + req.body.pseudo + "', message='" + req.body.msg.replace("'", "''") + "', date=NOW(), position_canal=" + req.body.idCanal+ ", position_sujet= ( SELECT id FROM list_sujet ORDER BY id DESC LIMIT 0,1 );")
       .then(() => {
         connection.promise().query("COMMIT;")
@@ -47,8 +48,6 @@ exports.createSujet= (req, res) => {
       .catch(error => res.status(500).json({error}));
       })
       .catch(error => res.status(500).json({error}));
-    })
-    .catch(error => res.status(500).json({error}));
   }else{
     return res.status(405).json({ message: "Caractère non autorisé." });
   }
