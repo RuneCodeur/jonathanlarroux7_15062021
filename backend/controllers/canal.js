@@ -11,7 +11,14 @@ exports.getAllCanal= (req, res) => {
 
 //obtient la liste de tout les sujet suivant le canal choisi -- ok
 exports.getAllSujet= (req, res) => {
-  connection.promise().query("SELECT id, nom_sujet, id_creator, pseudo_creator FROM list_sujet WHERE position_canal = " + req.params.idCanal + ";")
+  connection.promise().query("SELECT list_sujet.id AS id, list_sujet.nom_sujet AS nom_sujet, list_sujet.id_user AS id_user, users.pseudo AS pseudo_creator FROM list_sujet INNER JOIN users on list_sujet.id_user = users.id WHERE position_canal = " + req.params.idCanal + ";")
+  .then(([row, fields]) =>{res.status(200).json({row})})
+  .catch(error => res.status(500).json({error}));
+};
+
+//obtient le canal choisi ---------------
+exports.getOneSujet= (req, res) => {
+  connection.promise().query("SELECT nom_sujet, id_creator, pseudo_creator FROM list_sujet WHERE id = " + req.params.idSujet + ";")
   .then(([row, fields]) =>{res.status(200).json({row})})
   .catch(error => res.status(500).json({error}));
 };
@@ -32,22 +39,19 @@ exports.createSujet= (req, res) => {
   if((regex.test(req.body.sujetName) === true) && (regex.test(req.body.pseudo) === true) && (regex.test(req.body.msg) === true)){
     connection.promise().query("SET autocommit=0;")
     .then(() => {
-      return connection.promise().query("INSERT INTO list_sujet SET nom_sujet='" + req.body.sujetName.replace("'", "''") + "', position_canal= " + req.body.idCanal + ", id_creator= " + req.body.id + ", pseudo_creator= '" + req.body.pseudo + "';")
+      return connection.promise().query("INSERT INTO list_sujet SET nom_sujet='" + req.body.sujetName.replace("'", "''") + "', position_canal= " + req.body.idCanal + ", id_user= " + req.body.id + ";")
     })
     .then(() => {
-      connection.promise().query("INSERT INTO list_msg SET id_user=" + req.body.id + ", name_user= '" + req.body.pseudo + "', message='" + req.body.msg.replace("'", "''") + "', date=NOW(), position_canal=" + req.body.idCanal+ ", position_sujet= ( SELECT id FROM list_sujet ORDER BY id DESC LIMIT 0,1 );")
-      .then(() => {
-        connection.promise().query("COMMIT;")
-        .then(() => {
-          connection.promise().query("SET autocommit=1;")
-          .then(() => res.status(200).json({ message: "nouveau sujet crée !"}))
-          .catch(error => res.status(500).json({error}));
-        })
-        .catch(error => res.status(500).json({error}));
-      })
-      .catch(error => res.status(500).json({error}));
-      })
-      .catch(error => res.status(500).json({error}));
+      return connection.promise().query("INSERT INTO list_msg SET id_user=" + req.body.id + ", message='" + req.body.msg.replace("'", "''") + "', date=NOW(), position_canal=" + req.body.idCanal+ ", position_sujet= ( SELECT id FROM list_sujet ORDER BY id DESC LIMIT 0,1 );")
+    })
+    .then(() => {
+      return connection.promise().query("COMMIT;")
+    })
+    .then(() => {
+      return connection.promise().query("SET autocommit=1;")
+    })
+    .then(() => res.status(200).json({ message: "nouveau sujet crée !"}))
+    .catch(error => res.status(500).json({error}));
   }else{
     return res.status(405).json({ message: "Caractère non autorisé." });
   }

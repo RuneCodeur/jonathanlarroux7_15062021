@@ -60,7 +60,7 @@ export default {
       .catch(err =>{
         document.getElementById('errorMsg').innerText = err.response.data.error;
       })
-    }
+    },
 
   }
 }

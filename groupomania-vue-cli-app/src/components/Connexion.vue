@@ -32,7 +32,7 @@ import { mapActions } from 'vuex'
 
 export default{
   computed:{
-    ... mapState(['token','pseudoData', 'id', 'mailData', 'status']),
+    ... mapState(['tokenStore',]),
   },
 
   nape: "app",
@@ -46,14 +46,14 @@ export default{
   },
 
   created() {
-    if(this.tokenStore == ''){ //si j'ai un store
-      if(localStorage.getItem('user')){ //et un localstorage
+    if(this.tokenStore == ''){
+      if(localStorage.getItem('user')){
         this.$router.push('/forum')
-      }else{ //mais pas de localstorage
+      }else{
         this.$store.dispatch('disconnect_user');
       }
-    }else{ //si pas de store
-      if(localStorage.getItem('user')){ //MAIS un localstorage
+    }else{
+      if(localStorage.getItem('user')){
         let userStorage = JSON.parse(localStorage.getItem('user'))
         this.$store.dispatch('new_user', userStorage)
         this.$router.push('/forum')
@@ -80,7 +80,7 @@ export default{
         document.getElementById('errorMsg').innerText = err.response.data.error;
         connectButton.disabled = false;
       });
-    }
+    },
 
   }
 }

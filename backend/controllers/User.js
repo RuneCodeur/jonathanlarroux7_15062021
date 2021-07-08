@@ -7,7 +7,6 @@ let mailRegex = new RegExp("^[A-Za-z-_ 0-9.]+@([A-Za-z-_ 0-9-]+\.)+[A-Za-z]$");
 //crée un nouveau compte utilisateur
 exports.signup = (req, res) => {
   if ((regex.test(req.body.mdp) === true) && (mailRegex.test(req.body.mail) === true) && (regex.test(req.body.pseudo) === true)){
-    console.log(req.body.mdp)
     bcrypt.hash(req.body.mdp, 10)
     .then(hash =>{
       connection.promise().query("INSERT INTO users SET pseudo ='" + req.body.pseudo + "', mail='" + req.body.mail + "', mdp='" + hash + "';")
@@ -16,7 +15,7 @@ exports.signup = (req, res) => {
       })
       .catch(error => res.status(500).json({ error }));
     })
-    .catch(error => res.status(500).json({ error }));
+    .catch(() => res.status(500).json({ error: 'ce pseudo est déja utilisée' }));
   }else {
     return res.status(405).json({ error: "caractère non autorisé." });
   }
@@ -54,22 +53,22 @@ exports.login = (req, res) => {
 
 //modifie un utilisateur -- ok ?
 exports.modify = (req, res) =>{
-  if((regex.test(req.body.params.newPseudo) === true) && (mailRegex.test(req.body.params.mail) === true)){ 
-    connection.promise().query("UPDATE users SET pseudo = '" + req.body.params.newPseudo + "' WHERE id =" + req.body.params.id + " AND mail ='" + req.body.params.mail + "';")
+  if(regex.test(req.body.params.newPseudo) === true){ 
+    connection.promise().query("UPDATE users SET pseudo = '" + req.body.params.newPseudo + "' WHERE id =" + req.body.params.id + ";")
     .then(() => res.status(200).json({ message: "pseudo de l'utilisateur modifié !"}))
     .catch(() => res.status(500).json({ error: "action non autorisé." }));
   }else{
-    return res.status(405).json({ message: "Caractère non autorisé." });
+    return res.status(405).json({ error: "Caractère non autorisé." });
   }
 }
 
-//supprime le compte utilisateur -- ok 
+//supprime le compte utilisateur
 exports.delete = (req, res) =>{
-  if((mailRegex.test(req.query.mail) === true) && (regex.test(req.query.pseudo) === true)){ 
-  connection.promise().query ("DELETE FROM users WHERE mail='" + req.query.mail + "' AND id=" + req.query.id + " AND pseudo='" + req.query.pseudo + "';")
+  if(regex.test(req.query.pseudo) === true){ 
+  connection.promise().query ("DELETE FROM users WHERE id=" + req.query.id + " AND pseudo='" + req.query.pseudo + "';")
     .then(() => res.status(200).json({ message: "utilisateur supprimé !"}))
     .catch(() => res.status(500).json({ error: "action non autorisé." }));
   }else{
-    return res.status(405).json({ message: "Caractère non autorisé." });
+    return res.status(405).json({ error: "Caractère non autorisé." });
   }
 }

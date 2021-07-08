@@ -76,7 +76,6 @@ export default {
         params:{
           newPseudo: this.newPseudo,
           id: this.idStore,
-          mail: this.mailStore,
         }
       })
       .then(() =>{
@@ -86,7 +85,7 @@ export default {
       .catch(err =>{
         document.getElementById('errorMsg').innerText = err.response.data.error;
       })
-    }
+    },
 
   }
 }

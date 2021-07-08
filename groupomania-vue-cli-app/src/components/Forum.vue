@@ -20,16 +20,16 @@
           {{canal.nom_canal}}
           </div>
           <div class="col-1 d-flex flex-column p-0 fs-6 justify-content-around">
-            <i class="fas fa-cog btn-warning py-2" v-show="showModif" @click="showChangeNameCanal = !showChangeNameCanal; idChangeCanal= canal.id, nameChangeCanal=canal.nom_canal"></i>
-            <i class="fas fa-trash-alt btn-danger py-2" v-show="showModif" @click="destroyCanal(canal.id)"></i>
+            <i class="fas fa-cog btn-warning py-2" v-show="showModif" @click="showChangeNameCanal = !showChangeNameCanal, idChangeCanal= canal.id, nameChangeCanal=canal.nom_canal"></i>
+            <i class="fas fa-trash-alt btn-danger py-2" v-show="showModif" @click="destroyCanal(canal.id) "></i>
           </div>
         </div>
       </div>
       
       <div id="errorMsg" class="text-danger"></div>
 
-      <div class="d-flex justify-content-center row mt-4" v-if=" statusStore === 1">
-        <input type="button" class="m-1 col-6" value="ajouter un forum" @click="showAddForum = !showAddForum" v-show="showAddForum - showModif">
+      <div class="d-flex justify-content-center row mt-4" v-if=" statusStore === 1 ">
+        <input type="button" class="m-1 col-6" value="ajouter un forum" @click="showAddForum = !showAddForum" v-show="showModif">
       <form class="d-flex justify-content-center row " method="post">
 
         <fieldset class="text-center my-4" v-show="!showAddForum" >
@@ -44,7 +44,7 @@
           <input type="button" value="modifier" class="col-3" @click="modifyCanal" >
         </fieldset>
       </form>
-      <input type="button" class="m-1 col-6" value="supprimer/modifier un forum" @click="showModif = !showModif" v-show="showAddForum - showModif">
+      <input type="button" class="m-1 col-6" value="supprimer/modifier un forum" @click="showModif = !showModif" v-show="showAddForum">
       </div> 
     </div>
   </div>
@@ -70,7 +70,7 @@ export default{
       listCanal: '',
       canalName: '',
       idChangeCanal: '',
-      nameChangeCanal:'',
+      nameChangeCanal: '',
     }
   },
 
@@ -108,18 +108,20 @@ export default{
 
   methods: {
     ... mapActions(['select_canal', 'disconnect_user', 'new_user']),
+    
     newForum(){
-    HTTP.defaults.headers.common['Authorization'] = `bearer ${this.tokenStore}`;
-    HTTP.post('/canal/createCanal',{
-      params:{
-        canalName: this.canalName,
-      }
-    }).then(() =>{
-        this.$router.go('/forum')
+      HTTP.defaults.headers.common['Authorization'] = `bearer ${this.tokenStore}`;
+      HTTP.post('/canal/createCanal',{
+        params:{
+          canalName: this.canalName,
+        }
       })
-      .catch(err => {
-        document.getElementById('errorMsg').innerText = err.response.data.error;
-      });
+      .then(() =>{
+          this.$router.go({name: 'Forum'})
+        })
+        .catch(err => {
+          document.getElementById('errorMsg').innerText = err.response.data.error;
+        });
     },
 
     goToCanal(id, name){
@@ -139,7 +141,7 @@ export default{
       HTTP.defaults.headers.common['Authorization'] = `bearer ${this.tokenStore}`;
       HTTP.put('/canal/modifyCanal', formulaire)
       .then(()=>{
-      this.$router.push({name: 'News'})
+      this.$router.go({name: 'Forum'})
       })
       .catch(err => {
         document.getElementById('errorMsg').innerText = err.response.data.error;
@@ -153,7 +155,7 @@ export default{
       HTTP.defaults.headers.common['Authorization'] = `bearer ${this.tokenStore}`;
       HTTP.delete('/canal/'+ id, formulaire)
       .then(() =>{
-        this.$router.push({name: 'News'})
+        this.$router.go({name: 'Forum'})
       })
       .catch(err => {
         document.getElementById('errorMsg').innerText = err.response.data.error;

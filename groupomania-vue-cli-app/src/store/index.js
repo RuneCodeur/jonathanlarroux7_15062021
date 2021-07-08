@@ -5,7 +5,6 @@ export default createStore({
     tokenStore:'',
     pseudoStore:'',
     idStore:'',
-    mailStore:'',
     statusStore:'',
     idCanalStore:'',
     nameCanalStore:'',
@@ -18,7 +17,6 @@ export default createStore({
       state.tokenStore = res.token
       state.pseudoStore = res.pseudo
       state.idStore = res.id
-      state.mailStore = res.mail
       state.statusStore = res.status
     },
     value_canal(state, res){
@@ -37,7 +35,6 @@ export default createStore({
         token: res.token,
         pseudo: res.pseudo,
         id: res.id,
-        mail: res.mail,
         status: res.status,
       };
       localStorage.setItem('user', JSON.stringify(response));
@@ -61,11 +58,10 @@ export default createStore({
 
     disconnect_user(context){
       let response = {
-        token: '',
-        pseudo: '',
-        id: '',
-        mail: '',
-        status: '',
+        token:'',
+        pseudo:'',
+        id:'',
+        status:'',
       }
       context.commit('value_user', response)
       localStorage.clear();
@@ -86,7 +82,6 @@ export default createStore({
         token: context.state.tokenStore,
         pseudo: res,
         id: context.state.idStore,
-        mail: context.state.mailStore,
         status: context.state.statusStore,
       }
       context.commit('value_user', response)

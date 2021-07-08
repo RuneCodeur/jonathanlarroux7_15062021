@@ -6,6 +6,7 @@ const auth = require('../middleware/auth');
 
 router.get('/welcome', auth, canalCtrl.getAllCanal); // ok
 router.get('/:idCanal', auth,canalCtrl.getAllSujet); // ok
+router.get('/:idCanal/:idSujet', auth, canalCtrl.getOneSujet);
 router.post('/createCanal', auth, canalCtrl.createCanal); // ok (à modo)
 router.post('/:idCanal/createSujet', canalCtrl.createSujet); // ok
 router.put('/modifyCanal', auth, canalCtrl.modifyCanal); // ok (à modo)

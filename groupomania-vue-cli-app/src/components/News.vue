@@ -11,18 +11,24 @@
     <div class="d-flex container flex-column text-center">
 
       <h2>news</h2>
+      
+      <div id="errorMsg" class="text-danger"></div>
 
       <div class="d-flex align-items-center flex-column">
         
-        <div class="btn btn-white col-10 my-2 text-start border border-primary" @click="selectMessage(msg.position_canal, msg.position_sujet)" v-for="msg in newMsg" :key="msg.id">
+        <div class="btn btn-white col-10 my-2 text-start border border-primary" @click="selectMessage(msg.idCanal, msg.idSujet, msg.nomSujet, msg.pseudo)" v-for="msg in newMsg" :key="msg.id">
+          
           <div class="border-bottom border-secondary p-1 mb-4">
-            <div class="fw-bold fs-5">{{msg.name_user}}</div>
+            <div class="fs-3"> canal: {{msg.nomCanal}}</div>
+            <div class="fs-4"> sujet: {{msg.nomSujet}}</div>
+            <div class="fw-bold fs-5"> par {{msg.pseudo}} </div>
             <div class="fst-italic px-3">le {{msg.date}}</div>
           </div>
           <div class="mx-2">{{msg.message}}</div>
         </div>
-        <div id="errorMsg" class="text-danger"></div>
+        
       </div>
+
     </div>
   </div>
 </template>
@@ -34,7 +40,7 @@ import { mapActions } from 'vuex'
 
 export default{
   computed:{
-    ... mapState(['tokenStore', 'statusStore',]),
+    ... mapState(['tokenStore',]),
   },
 
   nape: "app",
@@ -54,6 +60,7 @@ export default{
       HTTP.get('/messages/New')
       .then(response =>{
         this.newMsg = response.data.row.reverse()
+        console.log(this.newMsg)
       })
       .catch(err=>{
         document.getElementById('errorMsg').innerText = err.response.data.error;
@@ -75,16 +82,18 @@ export default{
 
   methods: {
     ... mapActions(['disconnect_user', 'new_user']),
-    selectMessage(idCanal, idSujet){
+    selectMessage(idCanal, idSujet, nameSujet, creatorSujet){
       let response = {
         idCanal: idCanal,
         idSujet: idSujet,
+        nameSujet: nameSujet,
+        creatorSujet: creatorSujet
       }
       this.$store.dispatch('select_sujet', response)
       this.$router.push({name: 'Sujet', params: {idCanal: idCanal, idSujet: idSujet}})
     },
-  },
-
+    
+  }
 }
 </script>
 

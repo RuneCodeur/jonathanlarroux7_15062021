@@ -50,8 +50,8 @@ import { mapActions } from 'vuex'
 
 export default {
   computed:{
-    ... mapState(['tokenStore', 'pseudoStore', 'idStore', 'statusStore', 'idCanalStore', 'idSujetStore', 'nameSujetStore', 'creatorSujetStore']),
-  }, 
+    ... mapState(['tokenStore', 'pseudoStore', 'idStore', 'statusStore', 'nameSujetStore', 'creatorSujetStore']),
+  },
 
   nape: "app",
 
@@ -103,12 +103,12 @@ export default {
         id: this.idStore,
         pseudo: this.pseudoStore,
         msg: this.newMsg,
-        idCanal: this.idCanalStore,
-        idSujet: this.idSujetStore,
+        idCanal: this.$route.params.idCanal,
+        idSujet: this.$route.params.idSujet,
         }
       HTTP.post('/messages/'+ this.$route.params.idCanal + '/' + this.$route.params.idSujet + '/create', formulaire)
       .then(() =>{
-      this.$router.push({name: 'News'})
+      this.$router.go({name: 'Sujet', params: {idCanal: this.$route.params.idCanal, idSujet: this.$route.params.idSujet}})
       })
       .catch(err =>{
         document.getElementById('errorMsg').innerText = err.response.data.error;
@@ -124,7 +124,7 @@ export default {
       HTTP.defaults.headers.common['Authorization'] = `bearer ${this.tokenStore}`;
       HTTP.put('/messages/'+ this.$route.params.idCanal + '/' + this.$route.params.idSujet + '/' + this.modifyMsgId, formulaire)
       .then(()=>{
-      this.$router.push({name: 'News'})
+      this.$router.go({name: 'Sujet', params: {idCanal: this.$route.params.idCanal, idSujet: this.$route.params.idSujet}})
       })
       .catch(err =>{
         document.getElementById('errorMsg').innerText = err.response.data.error;
@@ -135,7 +135,7 @@ export default {
       HTTP.defaults.headers.common['Authorization'] = `bearer ${this.tokenStore}`;
       HTTP.delete('/messages/'+ this.$route.params.idCanal + '/' + this.$route.params.idSujet + '/' + id)
       .then(() =>{
-        this.$router.push({name: 'News'})
+        this.$router.go({name: 'Sujet', params: {idCanal: this.$route.params.idCanal, idSujet: this.$route.params.idSujet}})
       })
       .catch(err =>{
         document.getElementById('errorMsg').innerText = err.response.data.error;
