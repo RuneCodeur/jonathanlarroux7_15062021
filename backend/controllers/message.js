@@ -2,19 +2,18 @@ const connection = require('../connect');
 let regex = new RegExp("^[A-Za-z-éèêëçàâùï€$£_'.;:,@?!()\n 0-9]+$");
 
 
-//obtient la liste de tout les messages du sujet -- ok
+//obtient la liste de tout les messages du sujet
 exports.getMsg= (req, res) => {
-  connection.promise().query("SELECT list_msg.id AS id, list_msg.id_user AS id_user, users.pseudo AS name_user, list_msg.message AS message, list_msg.media AS media, DATE_FORMAT(list_msg.date, '%d/%m/%Y à %HH%i') as date FROM list_msg INNER JOIN users ON list_msg.id_user = users.id  WHERE position_canal = " + req.params.idCanal + " AND position_sujet= " + req.params.idSujet + ";")
+  connection.promise().query("SELECT list_msg.id AS id, list_msg.id_user AS id_user, users.pseudo AS name_user, list_msg.message AS message, list_msg.media AS media, DATE_FORMAT(list_msg.date, '%d/%m/%Y à %HH%i') as date FROM list_msg LEFT OUTER JOIN users ON list_msg.id_user = users.id  WHERE position_canal = " + req.params.idCanal + " AND position_sujet= " + req.params.idSujet + ";")
   .then(([row, fields]) => {res.status(200).json({row})})
   .catch(error => res.status(500).json({error}));
 };
 
-//crée un message -- ok
+//crée un message
 exports.createMsg= (req, res) => {
   //si il n'y a pas de media
   if( req.file === undefined){
     if((regex.test(req.body.msg) === true)){
-      console.log(req.body)
       connection.promise().query("INSERT INTO list_msg SET id_user=" + req.body.id + ", message='" + req.body.msg + "', date=SYSDATE(), position_canal=" + req.body.idCanal+ ", position_sujet=" + req.body.idSujet + ";")
       .then(() => res.status(200).json({ message: "message posté !"}))
       .catch(error => res.status(500).json({error})); 
@@ -34,14 +33,14 @@ exports.createMsg= (req, res) => {
   }
 };
 
-//obtient la liste de tout les messages récents -- ok
+//obtient la liste de tout les messages récents
 exports.getNewMsg= (req, res) => {
-  connection.promise().query("SELECT list_msg.id_user AS id_user, users.pseudo AS pseudo, list_msg.message AS message, list_msg.media AS media, DATE_FORMAT(list_msg.date, '%d/%m/%Y à %HH%i') as date, list_msg.position_canal AS idCanal, list_msg.position_sujet AS idSujet, list_sujet.nom_sujet AS nomSujet, list_canal.nom_canal AS nomCanal FROM list_msg INNER JOIN users ON list_msg.id_user = users.id INNER JOIN list_sujet ON list_msg.position_sujet = list_sujet.id INNER JOIN list_canal ON list_msg.position_canal = list_canal.id ORDER BY date LIMIT 10;")
+  connection.promise().query("SELECT list_msg.message AS message, list_msg.id_user AS id_user, users.pseudo AS pseudo, list_msg.media AS media, DATE_FORMAT(list_msg.date, '%d/%m/%Y à %HH%i') as date, list_msg.position_canal AS idCanal, list_msg.position_sujet AS idSujet, list_sujet.nom_sujet AS nomSujet, list_canal.nom_canal AS nomCanal FROM list_msg LEFT OUTER JOIN list_canal ON list_msg.position_canal = list_canal.id LEFT OUTER JOIN list_sujet ON list_msg.position_sujet = list_sujet.id LEFT OUTER JOIN users ON list_msg.id_user = users.id ORDER BY date LIMIT 10;")
   .then(([row, fields]) =>{res.status(200).json({row})})
   .catch(error => res.status(500).json({error}));
 };
 
-//modifie son message --  ok
+//modifie son message
 exports.modifyMyMsg= (req, res) => {
   //si il n'y a pas de media
   if( req.file === undefined){
@@ -65,7 +64,7 @@ exports.modifyMyMsg= (req, res) => {
   }
 };
 
-//supprime son message -- ok
+//supprime son message
 exports.deleteMyMsg= (req, res) => {
   connection.promise().query("DELETE FROM list_msg WHERE id=" + req.params.idMsg + ";")
   .then(() => res.status(200).json({ message: "message supprimé !"}))

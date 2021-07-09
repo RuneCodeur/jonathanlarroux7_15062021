@@ -17,7 +17,8 @@
         <div id="errorMsg" class="text-danger"></div>
         <div class="card col-11 text-start border border-primary" v-for="msg in listMsg" :key="msg.id">
           <div class="border-bottom border-secondary p-1">
-            <div class="fw-bold fs-5">{{msg.name_user}}</div>
+            <div class="fw-bold fs-5" v-if="msg.name_user != null">{{msg.name_user}}</div>
+            <div class="fw-bold fs-5" v-if="msg.name_user == null">- utilisateur supprimé -</div>
             <div class="row m-0"> 
               <div class="fst-italic p-0 col-8 border"> le {{msg.date}}</div>
               <div class="col-4" v-if="msg.id_user === idStore || statusStore === 1">

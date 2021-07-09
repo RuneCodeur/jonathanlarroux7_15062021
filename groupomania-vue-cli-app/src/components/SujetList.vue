@@ -18,7 +18,8 @@
       <div class="my-1 d-flex row col-12" v-for="sujet in listSujet" :key="sujet.id">
         <div @click="goToSujet(sujet.id, sujet.nom_sujet, sujet.pseudo_creator)" class="btn btn-secondary d-flex row col-11 m-0 p-0 ">
           <div class="col-8 border d-flex flex-column justify-content-around p-3"> {{ sujet.nom_sujet }} </div>
-          <div class="col-4 border d-flex flex-column justify-content-around p-3"> {{ sujet.pseudo_creator }} </div> 
+          <div class="col-4 border d-flex flex-column justify-content-around p-3" v-if="sujet.pseudo_creator != null"> {{ sujet.pseudo_creator }} </div> 
+          <div class="col-4 border d-flex flex-column justify-content-around p-3" v-if="sujet.pseudo_creator == null"> utilisateur supprimé </div>
       </div>
 
           <div class="col-1 d-flex flex-column p-0 fs-6 justify-content-around" v-if="sujet.id_user === idStore || statusStore === 1">

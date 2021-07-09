@@ -21,7 +21,8 @@
           <div class="border-bottom border-secondary p-1 mb-4">
             <div class="fs-3"> canal: {{msg.nomCanal}}</div>
             <div class="fs-4"> sujet: {{msg.nomSujet}}</div>
-            <div class="fw-bold fs-5"> par {{msg.pseudo}} </div>
+            <div class="fw-bold fs-5" v-if="msg.pseudo != null"> par {{msg.pseudo}} </div>
+            <div class="fw-bold fs-5" v-if="msg.pseudo == null"> par - utilisateur supprimé -</div>
             <div class="fst-italic px-3">le {{msg.date}}</div>
           </div>
           <div class="mx-2">{{msg.message}}</div>
@@ -59,8 +60,8 @@ export default{
       HTTP.defaults.headers.common['Authorization'] = `bearer ${this.tokenStore}`;
       HTTP.get('/messages/New')
       .then(response =>{
+        console.log(response)
         this.newMsg = response.data.row.reverse()
-        console.log(this.newMsg)
       })
       .catch(err=>{
         document.getElementById('errorMsg').innerText = err.response.data.error;

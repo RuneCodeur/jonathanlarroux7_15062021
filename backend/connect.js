@@ -7,4 +7,4 @@ const connection = mysql.createConnection({
     database:"groupomania",
 })
 
-  module.exports = connection;
+module.exports = connection;

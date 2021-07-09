@@ -52,14 +52,15 @@ routes
 informations suplémentaire
 -en cours-
 
-
-ajuster la gestion des erreurs du front
-modifier les insertions sql avec les [] et les fonctions pour personaliser les erreurs
-
+modifier les insertions sql avec les [] et les fonctions 
+personaliser les erreurs front et back
 modifier backend AUTH pour que si tu es un modo, tu peux modifer tout les messages/sujet que tu veux/creer des canaux
 ajuster les regex
 placer des regex sur le front
+
 modifier bootstrap pour le rendre 100% responsive
 integrer l'ajout de fichier
 integrer l'utilisation de gify
+tester toutes les routes
 mettre le code au propre
+supprimer aussi le sujet quand le dernier message est suprimé

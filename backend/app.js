@@ -15,7 +15,6 @@ const limiter = rateLimit({
 });
 
 //connection
-
 connection.query("select CURTIME();",
 function(err, result) {
   if(result){
@@ -42,7 +41,7 @@ app.use(limiter);
 
 app.use('/images', express.static(path.join(__dirname, 'images')));
 
-//routes principale
+//routes
 app.use('/api/messages', messagesRoutes);
 app.use('/api/auth', userRoutes);
 app.use('/api/canal', canalRoutes);

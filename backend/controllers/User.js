@@ -51,7 +51,7 @@ exports.login = (req, res) => {
   }
 };
 
-//modifie un utilisateur -- ok ?
+//modifie un utilisateur
 exports.modify = (req, res) =>{
   if(regex.test(req.body.params.newPseudo) === true){ 
     connection.promise().query("UPDATE users SET pseudo = '" + req.body.params.newPseudo + "' WHERE id =" + req.body.params.id + ";")
