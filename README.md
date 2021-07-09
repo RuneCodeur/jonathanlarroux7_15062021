@@ -62,5 +62,6 @@ modifier bootstrap pour le rendre 100% responsive
 integrer l'ajout de fichier
 integrer l'utilisation de gify
 tester toutes les routes
+renommer le terme canal par forum
 mettre le code au propre
 supprimer aussi le sujet quand le dernier message est suprimé

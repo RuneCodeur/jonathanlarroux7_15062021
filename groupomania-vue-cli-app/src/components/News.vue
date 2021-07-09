@@ -19,8 +19,8 @@
         <div class="btn btn-white col-10 my-2 text-start border border-primary" @click="selectMessage(msg.idCanal, msg.idSujet, msg.nomSujet, msg.pseudo)" v-for="msg in newMsg" :key="msg.id">
           
           <div class="border-bottom border-secondary p-1 mb-4">
-            <div class="fs-3"> canal: {{msg.nomCanal}}</div>
-            <div class="fs-4"> sujet: {{msg.nomSujet}}</div>
+            <div class="fs-3 fw-bold"> canal: {{msg.nomCanal}}</div>
+            <div class="fs-4 fw-bold"> sujet: {{msg.nomSujet}}</div>
             <div class="fw-bold fs-5" v-if="msg.pseudo != null"> par {{msg.pseudo}} </div>
             <div class="fw-bold fs-5" v-if="msg.pseudo == null"> par - utilisateur supprimé -</div>
             <div class="fst-italic px-3">le {{msg.date}}</div>
@@ -60,8 +60,7 @@ export default{
       HTTP.defaults.headers.common['Authorization'] = `bearer ${this.tokenStore}`;
       HTTP.get('/messages/New')
       .then(response =>{
-        console.log(response)
-        this.newMsg = response.data.row.reverse()
+        this.newMsg = response.data.result.reverse()
       })
       .catch(err=>{
         document.getElementById('errorMsg').innerText = err.response.data.error;
@@ -73,7 +72,7 @@ export default{
       HTTP.defaults.headers.common['Authorization'] = `bearer ${this.tokenStore}`;
       HTTP.get('/messages/New')
       .then(response =>{
-        this.newMsg = response.data.row.reverse()
+        this.newMsg = response.data.result.reverse()
        })
       .catch(err=>{
         document.getElementById('errorMsg').innerText = err.response.data.error;

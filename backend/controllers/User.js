@@ -9,43 +9,58 @@ exports.signup = (req, res) => {
   if ((regex.test(req.body.mdp) === true) && (mailRegex.test(req.body.mail) === true) && (regex.test(req.body.pseudo) === true)){
     bcrypt.hash(req.body.mdp, 10)
     .then(hash =>{
-      connection.promise().query("INSERT INTO users SET pseudo ='" + req.body.pseudo + "', mail='" + req.body.mail + "', mdp='" + hash + "';")
-      .then(() => {
-        return res.status(200).json({ message: "utilisateur crée !" });
+      connection.execute("INSERT INTO users SET pseudo = ? , mail= ? , mdp= ? ;",
+        [req.body.pseudo, req.body.mail, hash],
+        function(err, result){
+          if(err){
+            res.status(400).json({error: "pseudo ou mail déja utilisé"})
+          }
+          else if(result){
+            res.status(200).json({message: "utilisateur crée !"})
+          }
       })
-      .catch(error => res.status(500).json({ error }));
     })
-    .catch(() => res.status(500).json({ error: 'ce pseudo est déja utilisée' }));
+    .catch(() => res.status(500).json({ error }));
   }else {
-    return res.status(405).json({ error: "caractère non autorisé." });
+    return res.status(405).json({error: "caractère non autorisé." });
   }
 };
 
 //connecte un utilisateur à son compte
 exports.login = (req, res) => {
   if ((regex.test(req.query.mdp) === true) && (mailRegex.test(req.query.mail) === true)){
-    connection.promise().query("SELECT * FROM users WHERE mail='" + req.query.mail + "' LIMIT 1;")
-    .then(([row, fields]) =>{
-      let response= row[0]
-      bcrypt.compare(req.query.mdp, response.mdp, function(err, result){
-        if(result === true){
-          res.status(200).json({
-          id: response.id,
-          status: response.status,
-          pseudo: response.pseudo,
-          mail: response.mail,
-          token: jwt.sign(
-            {id: response.id},
-            '487b05ac-0e11-4720-a02b-c36806ea094c', //clé secrete
-            { expiresIn: '72H' }, //durée d'expiration du token
-            {httpOnly: true})
-          })
+    connection.execute(
+      "SELECT * FROM users WHERE mail= ? LIMIT 1;",
+      [req.query.mail],
+      function(err, response){
+        if (err){
+          res.status(405).json({ error: "commande invalide" })
         }
-        else{
-          res.status(401).json({ error: "mot de passe incorrect." })
+        else if(response){
+          if(response[0] == undefined ){
+            res.status(405).json({ error: "utilisateur non trouvé" })
+          }else{
+            bcrypt.compare(req.query.mdp, response[0].mdp, function(err, result){ 
+              if(result === true){
+              res.status(200).json({
+              id: response[0].id,
+              status: response[0].status,
+              pseudo: response[0].pseudo,
+              mail: response[0].mail,
+              token: jwt.sign(
+                {id: response[0].id},
+                '487b05ac-0e11-4720-a02b-c36806ea094c', //clé secrete
+                { expiresIn: '72H' }, //durée d'expiration du token
+                {httpOnly: true})
+              })
+              }
+              else{
+                return res.status(401).json({ error: "mot de passe incorrect." });
+              }
+            })
+          }
         }
-      })
-    }).catch(() => res.status(405).json({ error: "utilisateur introuvable." }));
+    })
   }else {
     return res.status(405).json({ error: "caractère non autorisé." });
   }
@@ -54,9 +69,17 @@ exports.login = (req, res) => {
 //modifie un utilisateur
 exports.modify = (req, res) =>{
   if(regex.test(req.body.params.newPseudo) === true){ 
-    connection.promise().query("UPDATE users SET pseudo = '" + req.body.params.newPseudo + "' WHERE id =" + req.body.params.id + ";")
-    .then(() => res.status(200).json({ message: "pseudo de l'utilisateur modifié !"}))
-    .catch(() => res.status(500).json({ error: "action non autorisé." }));
+    connection.execute(
+      "UPDATE users SET pseudo = ? WHERE id = ? ;",
+      [req.body.params.newPseudo, req.body.params.id],
+      function(err, result){
+        if(err){
+          res.status(400).json({error: "pseudo déja utilisé"})
+        }
+        else if(result){
+          res.status(200).json({message: "votre pseudo à été modifié !"})
+        }
+    })
   }else{
     return res.status(405).json({ error: "Caractère non autorisé." });
   }
@@ -65,9 +88,16 @@ exports.modify = (req, res) =>{
 //supprime le compte utilisateur
 exports.delete = (req, res) =>{
   if(regex.test(req.query.pseudo) === true){ 
-  connection.promise().query ("DELETE FROM users WHERE id=" + req.query.id + " AND pseudo='" + req.query.pseudo + "';")
-    .then(() => res.status(200).json({ message: "utilisateur supprimé !"}))
-    .catch(() => res.status(500).json({ error: "action non autorisé." }));
+    connection.execute("DELETE FROM users WHERE id= ? AND pseudo= ? ;",
+    [req.query.id, req.query.pseudo],
+    function(err, result){
+      if(err){
+        res.status(500).json({error: "action non autorisé"})
+      }
+      else if(result){
+        res.status(200).json({message: "utilisateur supprimé !"})
+      }
+  })
   }else{
     return res.status(405).json({ error: "Caractère non autorisé." });
   }

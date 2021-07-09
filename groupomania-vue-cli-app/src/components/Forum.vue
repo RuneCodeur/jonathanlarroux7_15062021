@@ -83,7 +83,7 @@ export default{
         HTTP.defaults.headers.common['Authorization'] = `bearer ${this.tokenStore}`;
         HTTP.get('/canal/welcome')
         .then(response =>{
-          this.listCanal = response.data.row
+          this.listCanal = response.data.result
         })
         .catch(err => {
           document.getElementById('errorMsg').innerText = err.response.data.error;
@@ -93,11 +93,10 @@ export default{
         this.$router.push('/')
       }
     }else{
-
       HTTP.defaults.headers.common['Authorization'] = `bearer ${this.tokenStore}`;
       HTTP.get('/canal/welcome')
       .then(response =>{
-        this.listCanal = response.data.row
+        this.listCanal = response.data.result
       })
       .catch(err => {
         document.getElementById('errorMsg').innerText = err.response.data.error;

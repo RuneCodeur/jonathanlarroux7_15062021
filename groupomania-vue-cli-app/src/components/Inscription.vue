@@ -94,7 +94,7 @@ export default{
       })
       .catch(err => {
         console.log(err.response.data.error)
-        document.getElementById('errorMsg').innerText = err.response.data.error.message;
+        document.getElementById('errorMsg').innerText = err.response.data.error;
         inscriButton.disabled= false;
       });
     },
