@@ -57,7 +57,7 @@ import { mapActions } from 'vuex'
 
 export default{
   computed:{
-    ... mapState(['tokenStore', 'statusStore', 'idCanalStore']),
+    ... mapState(['tokenStore', 'statusStore','idStore', 'idCanalStore']),
   },
 
   nape: "app",
@@ -109,12 +109,12 @@ export default{
     ... mapActions(['select_canal', 'disconnect_user', 'new_user']),
     
     newForum(){
+      let formulaire= {
+        id: this.idStore,
+        canalName: this.canalName,
+      }
       HTTP.defaults.headers.common['Authorization'] = `bearer ${this.tokenStore}`;
-      HTTP.post('/canal/createCanal',{
-        params:{
-          canalName: this.canalName,
-        }
-      })
+      HTTP.post('/canal/createCanal', formulaire)
       .then(() =>{
           this.$router.go({name: 'Forum'})
         })
@@ -134,6 +134,7 @@ export default{
 
     modifyCanal(){
       let formulaire= {
+        id: this.idStore,
         canalId: this.idChangeCanal,
         canalName: this.nameChangeCanal,
       }
@@ -148,11 +149,8 @@ export default{
     },
 
     destroyCanal(id){
-      const formulaire = {
-        idSujet: id,
-      }
       HTTP.defaults.headers.common['Authorization'] = `bearer ${this.tokenStore}`;
-      HTTP.delete('/canal/'+ id, formulaire)
+      HTTP.delete('/canal/'+ id)
       .then(() =>{
         this.$router.go({name: 'Forum'})
       })

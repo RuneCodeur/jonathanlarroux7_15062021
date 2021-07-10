@@ -22,9 +22,9 @@
           <div class="col-4 border d-flex flex-column justify-content-around p-3" v-if="sujet.pseudo_creator == null"> utilisateur supprimé </div>
       </div>
 
-          <div class="col-1 d-flex flex-column p-0 fs-6 justify-content-around" v-if="sujet.id_user === idStore || statusStore === 1">
-            <i class="fas fa-cog btn-warning py-2" v-show="showModif" @click="showChangeNameSujet = !showChangeNameSujet; idChangeSujet= sujet.id, nameChangeSujet=sujet.nom_sujet"></i>
-            <i class="fas fa-trash-alt btn-danger py-1" v-show="showModif" @click="destroySujet(sujet.id)"></i>
+          <div class="col-1 d-flex flex-column p-0 fs-6 justify-content-around" v-if="sujet.id_creator === idStore || statusStore === 1">
+            <i class="fas fa-cog btn-warning py-2" v-show="showModif" @click="showChangeNameSujet = !showChangeNameSujet; idChangeSujet= sujet.id, nameChangeSujet=sujet.nom_sujet, idCreator=sujet.id_creator"></i>
+            <i class="fas fa-trash-alt btn-danger py-1" v-show="showModif" @click="destroySujet(sujet.id, sujet.id_creator)"></i>
           </div>
       </div>
       
@@ -67,6 +67,7 @@ export default {
       showChangeNameSujet: false,
       idChangeSujet: '',
       nameChangeSujet: '',
+      idCreator: '',
     }
   },
 
@@ -117,8 +118,10 @@ export default {
 
     modifySujet(){
       let formulaire= {
+        id: this.idStore,
         sujetId: this.idChangeSujet,
         sujetName: this.nameChangeSujet,
+        idCreator: this.idCreator,
       }
       HTTP.defaults.headers.common['Authorization'] = `bearer ${this.tokenStore}`;
       HTTP.put('/canal/' + this.$route.params.idCanal + '/modifySujet', formulaire)
@@ -134,9 +137,11 @@ export default {
       this.$router.push({ name:`SujetCreate`, params: { idCanal: this.$route.params.idCanal }})
     },
 
-    destroySujet(id){
+    destroySujet(id, creator){
       const formulaire = {
+        id: this.idStore,
         idSujet: id,
+        idCreator: creator,
       }
       HTTP.defaults.headers.common['Authorization'] = `bearer ${this.tokenStore}`;
       HTTP.delete('/canal/'+ this.$route.params.idCanal +'/'+ id, formulaire)

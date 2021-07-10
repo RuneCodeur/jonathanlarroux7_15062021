@@ -19,7 +19,7 @@ exports.getAllCanal= (req, res) => {
 //obtient la liste de tout les sujet suivant le canal choisi
 exports.getAllSujet= (req, res) => {
   connection.execute(
-    "SELECT list_sujet.id AS id, list_sujet.nom_sujet AS nom_sujet, list_sujet.id_user AS id_user, users.pseudo AS pseudo_creator FROM list_sujet LEFT OUTER JOIN users on list_sujet.id_user = users.id WHERE position_canal = ? ;",
+    "SELECT list_sujet.id AS id, list_sujet.nom_sujet AS nom_sujet, list_sujet.id_user AS id_creator, users.pseudo AS pseudo_creator FROM list_sujet LEFT OUTER JOIN users on list_sujet.id_user = users.id WHERE position_canal = ? ;",
     [ req.params.idCanal ],
     function(err, result){
       if(err){
@@ -33,12 +33,12 @@ exports.getAllSujet= (req, res) => {
 
 //crée un canal
 exports.createCanal= (req, res) => {
-  if((regex.test(req.body.params.canalName) === true)){
+  if((regex.test(req.body.canalName) === true)){
     connection.execute(
       "INSERT INTO list_canal SET nom_canal= ? ;",
-      [ req.body.params.canalName ],
+      [ req.body.canalName ],
       function(err, result){
-        if(err){
+        if(err){ 
           res.status(500).json({error: "commande invalide"})
         }
         else if(result){

@@ -77,7 +77,7 @@ exports.modifyMyMsg= (req, res) => {
     if( req.file === undefined ){
       connection.execute(
         "UPDATE list_msg SET message= ? , date= NOW() WHERE id= ? ;",
-        [req.body.newMsg, req.body.id],
+        [req.body.newMsg, req.body.idMsg],
         function(err, result){
           if(err){
           res.status(500).json({error: 'commande invalide'})
@@ -91,7 +91,7 @@ exports.modifyMyMsg= (req, res) => {
     }else if( req.file !== undefined ){
       connection.execute(
         "UPDATE list_msg SET message= ? , media= ?, date= NOW() WHERE id= ? ;",
-        [req.body.newMsg, req.body.media, req.body.id],
+        [req.body.newMsg, req.body.media, req.body.idMsg],
         function(err, result){
           if(err){
           res.status(500).json({error: 'commande invalide'})

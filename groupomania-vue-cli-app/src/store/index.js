@@ -16,6 +16,7 @@ export default createStore({
     value_user(state, res){
       state.tokenStore = res.token
       state.pseudoStore = res.pseudo
+      state.mailStore= res.mail
       state.idStore = res.id
       state.statusStore = res.status
     },
@@ -31,13 +32,7 @@ export default createStore({
       state.creatorSujetStore = res.creatorSujet
     },
     user_sessionStorage(state, res){
-      let response = {
-        token: res.token,
-        pseudo: res.pseudo,
-        id: res.id,
-        status: res.status,
-      };
-      localStorage.setItem('user', JSON.stringify(response));
+      localStorage.setItem('user', JSON.stringify(res));
     },
     position_sessionStorage(state, res){
       let response = {
@@ -60,6 +55,7 @@ export default createStore({
       let response = {
         token:'',
         pseudo:'',
+        mail: '',
         id:'',
         status:'',
       }
@@ -81,6 +77,7 @@ export default createStore({
       let response = {
         token: context.state.tokenStore,
         pseudo: res,
+        mail: context.state.mailStore,
         id: context.state.idStore,
         status: context.state.statusStore,
       }

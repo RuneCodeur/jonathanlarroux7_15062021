@@ -10,7 +10,8 @@
     
     <div class="d-flex container flex-column text-center">
       <h2>{{$store.state.nameSujetStore}}</h2>
-      <p>par {{$store.state.creatorSujetStore}}</p>
+      <p v-if="$store.state.creatorSujetStore != null">par {{$store.state.creatorSujetStore}}</p>
+      <p v-if="$store.state.creatorSujetStore == null">par - utilisateur supprimé -</p>
 
       <div class="d-flex align-items-center flex-column">
         
@@ -30,7 +31,7 @@
           </div>
           <div class="p-0 card" v-if="modifyMsgId === msg.id ">
             <textarea class="m-0 p-2 pt-4" v-model="modifyMsgValue"></textarea>
-            <input class="m-0" type="button" value="modifier le message" @click="modifyMsg()">
+            <input class="m-0" type="button" value="modifier le message" @click="modifyMsg(msg.id_user)">
           </div>
           <div class="mx-2 my-4" v-else>{{msg.message}}</div>
         </div>
@@ -76,6 +77,7 @@ export default {
       HTTP.defaults.headers.common['Authorization'] = `bearer ${this.tokenStore}`;
       HTTP.get('/messages/'+ this.$route.params.idCanal + '/' + this.$route.params.idSujet)
       .then(response =>{
+        console.log(response)
         this.listMsg = response.data.result
       })
       .catch(err =>{
@@ -116,12 +118,13 @@ export default {
       })
     },
 
-    modifyMsg(){
+    modifyMsg(idCreator){
       let formulaire = {
-        id: this.modifyMsgId,
+        id: this.idStore,
+        idMsg: this.modifyMsgId,
         newMsg: this.modifyMsgValue,
+        idCreator: idCreator,
       }
-      console.log(this.modifyMsgValue, formulaire)
       HTTP.defaults.headers.common['Authorization'] = `bearer ${this.tokenStore}`;
       HTTP.put('/messages/'+ this.$route.params.idCanal + '/' + this.$route.params.idSujet + '/' + this.modifyMsgId, formulaire)
       .then(()=>{

@@ -52,16 +52,18 @@ routes
 informations suplémentaire
 -en cours-
 
-modifier les insertions sql avec les [] et les fonctions 
-personaliser les erreurs front et back
-modifier backend AUTH pour que si tu es un modo, tu peux modifer tout les messages/sujet que tu veux/creer des canaux
+
+integrer l'ajout de fichier
+integrer l'utilisation de gify
 ajuster les regex
 placer des regex sur le front
 
 modifier bootstrap pour le rendre 100% responsive
-integrer l'ajout de fichier
-integrer l'utilisation de gify
 tester toutes les routes
-renommer le terme canal par forum
+personaliser les erreurs front et back
+renommer les des tables et les colonnes dans la BDD
 mettre le code au propre
+
+bonux
 supprimer aussi le sujet quand le dernier message est suprimé
+

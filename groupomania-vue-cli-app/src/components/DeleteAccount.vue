@@ -26,7 +26,7 @@ import { mapState } from 'vuex'
 import { mapActions } from 'vuex'
 
 export default { 
-  computed:{... mapState(['tokenStore','pseudoStore', 'idStore', 'mailStore']),
+  computed:{... mapState(['tokenStore','pseudoStore', 'idStore']),
   },
 
   nape: "app",
@@ -48,7 +48,6 @@ export default {
       HTTP.defaults.headers.common['Authorization'] = `bearer ${this.tokenStore}`;
       HTTP.delete('auth/delete', {
         params:{
-          mail: this.mailStore,
           id: this.idStore,
           pseudo: this.pseudoStore,
         }

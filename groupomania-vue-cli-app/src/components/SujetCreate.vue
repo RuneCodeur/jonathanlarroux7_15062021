@@ -36,7 +36,7 @@ import { mapActions } from 'vuex'
 
 export default{
   computed:{
-    ... mapState(['tokenStore','pseudoStore', 'idStore', 'mailStore', 'statusStore']),
+    ... mapState(['tokenStore','pseudoStore', 'idStore']),
   },
 
   nape: "app",
