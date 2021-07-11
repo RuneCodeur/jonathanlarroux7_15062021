@@ -62,6 +62,7 @@ modifier bootstrap pour le rendre 100% responsive
 tester toutes les routes
 personaliser les erreurs front et back
 renommer les des tables et les colonnes dans la BDD
+mettre un bloqueur sur les boutons pour eviter les doubles appels
 mettre le code au propre
 
 bonux

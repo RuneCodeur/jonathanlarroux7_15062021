@@ -1,6 +1,6 @@
 const connection = require('../connect');
 let regex = new RegExp("^[A-Za-z-éèêëçàâùï€$£_'.;:,@?!()\n 0-9]+$");
-
+let fs = require('fs')
 
 //obtient la liste de tout les messages du sujet
 exports.getMsg= (req, res) => {
@@ -25,7 +25,7 @@ exports.createMsg= (req, res) => {
     if( req.file === undefined){
       connection.execute(
         "INSERT INTO list_msg SET id_user= ? , message= ? , date=SYSDATE(), position_canal= ?, position_sujet= ? ;",
-        [req.body.id, req.body.msg, req.body.idCanal, req.body.idSujet],
+        [req.body.id, req.body.msg, req.params.idCanal, req.params.idSujet],
         function(err, result){
           if(err){
             res.status(500).json({error: 'commande invalide'})
@@ -35,12 +35,13 @@ exports.createMsg= (req, res) => {
           }
       })
     }
-
   //si il y a un media
     else if( req.file !== undefined){
+      let response = JSON.parse(req.body.message)
+       let localMedia = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
       connection.execute(
         "INSERT INTO list_msg SET id_user= ? , message= ? , media=?, date=SYSDATE(), position_canal= ?, position_sujet= ? ;",
-        [req.body.id, req.body.msg, req.body.media, req.body.idCanal, req.body.idSujet],
+        [response.id, response.msg, localMedia, req.params.idCanal, req.params.idSujet],
         function(err, result){
           if(err){
             res.status(500).json({error: 'commande invalide'})
@@ -72,35 +73,18 @@ exports.getNewMsg= (req, res) => {
 
 //modifie son message
 exports.modifyMyMsg= (req, res) => {
-  //si il n'y a pas de media
   if((regex.test(req.body.msg) === true)){
-    if( req.file === undefined ){
-      connection.execute(
-        "UPDATE list_msg SET message= ? , date= NOW() WHERE id= ? ;",
-        [req.body.newMsg, req.body.idMsg],
-        function(err, result){
-          if(err){
-          res.status(500).json({error: 'commande invalide'})
-          }
-          else if(result){
-          res.status(200).json({message: "message modifié !"})
-          }
-      })
-
-    //si il y a un media
-    }else if( req.file !== undefined ){
-      connection.execute(
-        "UPDATE list_msg SET message= ? , media= ?, date= NOW() WHERE id= ? ;",
-        [req.body.newMsg, req.body.media, req.body.idMsg],
-        function(err, result){
-          if(err){
-          res.status(500).json({error: 'commande invalide'})
-          }
-          else if(result){
-          res.status(200).json({message: "message modifié !"})
-          }
-      })
-    }
+    connection.execute(
+      "UPDATE list_msg SET message= ? , date= NOW() WHERE id= ? ;",
+      [req.body.newMsg, req.body.idMsg],
+      function(err, result){
+        if(err){
+        res.status(500).json({error: 'commande invalide'})
+        }
+        else if(result){
+        res.status(200).json({message: "message modifié !"})
+        }
+    })  
   }else{
     return res.status(405).json({ error: "Caractère non autorisé." });
   }
@@ -109,14 +93,43 @@ exports.modifyMyMsg= (req, res) => {
 //supprime son message
 exports.deleteMyMsg= (req, res) => {
   connection.execute(
-    "DELETE FROM list_msg WHERE id= ? ;",
+    "SELECT media from list_msg WHERE id= ? ;",
     [req.params.idMsg],
     function (err, result){
       if(err){
         res.status(500).json({error: 'commande invalide'})
       }
-      else if(result){
-        res.status(200).json({message: "message supprimé !"})
+      //si il n'y a pas de media
+      else if(result[0].media === null){
+        connection.execute(
+          "DELETE FROM list_msg WHERE id= ? ;",
+          [req.params.idMsg],
+          function (err, result){
+            if(err){
+              res.status(500).json({error: 'commande invalide'})
+            }
+            else if(result){
+              res.status(200).json({message: "message supprimé !"})
+            }
+        })
       }
-  })
+      //si il y a un media
+      else if (result[0].media !== null){
+        const filename = result[0].media.split('/images/')[1]
+        fs.unlink(`images/${filename}`, () => {
+          connection.execute(
+            "DELETE FROM list_msg WHERE id= ? ;",
+            [req.params.idMsg],
+            function (err, result){
+              if(err){
+                res.status(500).json({error: 'commande invalide'})
+              }
+              else if(result){
+                res.status(200).json({message: "message supprimé !"})
+              }
+          })
+        })
+      }
+    }
+  )
 };

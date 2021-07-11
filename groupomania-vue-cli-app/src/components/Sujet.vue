@@ -34,11 +34,17 @@
             <input class="m-0" type="button" value="modifier le message" @click="modifyMsg(msg.id_user)">
           </div>
           <div class="mx-2 my-4" v-else>{{msg.message}}</div>
+          <div class="col-12 d-flex justify-content-center">
+            <img v-bind:src=" msg.media" class="img-thumbnail" style="max-height:200px;">
+          </div>
         </div>
 
       </div>
       <div class="mt-5 d-flex align-items-center flex-column" v-if="modifyMsgId === ''">
         <textarea name="commentaire" class="col-10" placeholder="écrit ton commentaire ici !" v-model="newMsg"></textarea>
+        
+        <input type="file" @change="checkMedia()" id="upload" name="file">
+        <img id="preview" class="img-thumbnail" style="max-height:200px;" v-show="showMedia">
         <input class="mt-2" type="button" value="poster" @click="createMsg">
       </div>
     </div>
@@ -60,6 +66,7 @@ export default {
   data() {
     return {
       newMsg:'',
+      showMedia: false,
       listMsg:'',
       modifyMsgValue: '',
       modifyMsgId:'',
@@ -77,7 +84,6 @@ export default {
       HTTP.defaults.headers.common['Authorization'] = `bearer ${this.tokenStore}`;
       HTTP.get('/messages/'+ this.$route.params.idCanal + '/' + this.$route.params.idSujet)
       .then(response =>{
-        console.log(response)
         this.listMsg = response.data.result
       })
       .catch(err =>{
@@ -100,7 +106,40 @@ export default {
 
   methods: {
     ... mapActions(['disconnect_user', 'select_sujet', 'new_user']),
+
     createMsg() {
+      HTTP.defaults.headers.common['Authorization'] = `bearer ${this.tokenStore}`;
+      const formulaire = {
+        id: this.idStore,
+        pseudo: this.pseudoStore,
+        msg: this.newMsg
+      }
+      if( this.showMedia === true){ //message envoyé avec un media
+        const jsonResponse = JSON.stringify(formulaire)
+        const form = new FormData();
+        form.append("image", document.getElementById('upload').files[0], 'title.jpg');
+        form.append('message', jsonResponse)
+        HTTP.post('/messages/'+ this.$route.params.idCanal + '/' + this.$route.params.idSujet + '/create', form)
+        .then(() =>{
+          this.$router.go({name: 'Sujet', params: {idCanal: this.$route.params.idCanal, idSujet: this.$route.params.idSujet}})
+        })
+        .catch(err =>{
+          document.getElementById('errorMsg').innerText = err.response.data.error;
+        })
+      
+      }else { //message envoyé sans media
+        HTTP.post('/messages/'+ this.$route.params.idCanal + '/' + this.$route.params.idSujet + '/create', formulaire)
+        .then(() =>{
+        this.$router.go({name: 'Sujet', params: {idCanal: this.$route.params.idCanal, idSujet: this.$route.params.idSujet}})
+        })
+        .catch(err =>{
+          document.getElementById('errorMsg').innerText = err.response.data.error;
+        })
+      }
+    },
+
+
+    createMdsg() {
       HTTP.defaults.headers.common['Authorization'] = `bearer ${this.tokenStore}`;
       const formulaire = {
         id: this.idStore,
@@ -146,6 +185,16 @@ export default {
       })
     },
 
+    checkMedia(){
+      this.showMedia = true;
+
+      var mediaPreview = new FileReader();
+      mediaPreview.readAsDataURL(document.getElementById('upload').files[0]);
+      mediaPreview.onload = function(file){
+        document.getElementById('preview').src = file.target.result;
+      }
+    },
+    
   }
 }
 </script>

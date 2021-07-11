@@ -26,6 +26,9 @@
             <div class="fst-italic px-3">le {{msg.date}}</div>
           </div>
           <div class="mx-2">{{msg.message}}</div>
+          <div class="col-12 d-flex justify-content-center">
+            <img v-bind:src=" msg.media" class="img-thumbnail" style="max-height:200px;">
+          </div>
         </div>
         
       </div>

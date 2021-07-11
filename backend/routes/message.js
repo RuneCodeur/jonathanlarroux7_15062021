@@ -6,9 +6,9 @@ const auth = require('../middleware/auth');
 const multer = require('../middleware/multer-config');
 
 router.get('/:idCanal/:idSujet', auth.getAuth, msgCtrl.getMsg);
-router.post('/:idCanal/:idSujet/create', auth.getAuth, multer, msgCtrl.createMsg); // penser a rajouter l'ajout des fichiers
+router.post('/:idCanal/:idSujet/create', auth.getAuth, multer, msgCtrl.createMsg);
 router.get('/New', auth.getAuth, msgCtrl.getNewMsg);
-router.put('/:idCanal/:idSujet/:idMsg', auth.sensibleAuth, multer, msgCtrl.modifyMyMsg); // à modo
+router.put('/:idCanal/:idSujet/:idMsg', auth.sensibleAuth, msgCtrl.modifyMyMsg);
 router.delete('/:idCanal/:idSujet/:idMsg', auth.deleteAuth, msgCtrl.deleteMyMsg);
 
 module.exports = router;

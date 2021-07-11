@@ -11,6 +11,6 @@ router.post('/:idCanal/createSujet', auth.getAuth, canalCtrl.createSujet);
 router.put('/modifyCanal', auth.sensibleAuth, canalCtrl.modifyCanal); 
 router.put('/:idCanal/modifySujet',auth.sensibleAuth, canalCtrl.modifySujet); 
 router.delete('/:idCanal', auth.deleteAuth, canalCtrl.deleteCanal);
-router.delete('/:idCanal/:idSujet', auth.deleteAuth, canalCtrl.deleteSujet); // à modo
+router.delete('/:idCanal/:idSujet', auth.deleteAuth, canalCtrl.deleteSujet);
 
 module.exports = router;
