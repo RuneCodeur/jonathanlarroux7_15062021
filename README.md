@@ -52,6 +52,8 @@ routes
 informations suplémentaire
 -en cours-
 
+api key pour giphy
+0wqBg77PwEJXOIzxuYCoD2cAVrB6mvOc
 
 integrer l'ajout de fichier
 integrer l'utilisation de gify

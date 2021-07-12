@@ -35,17 +35,35 @@
           </div>
           <div class="mx-2 my-4" v-else>{{msg.message}}</div>
           <div class="col-12 d-flex justify-content-center">
-            <img v-bind:src=" msg.media" class="img-thumbnail" style="max-height:200px;">
+            <img v-bind:src=" msg.media" class="img-thumbnail"  style="max-height:200px;">
           </div>
         </div>
+
+
 
       </div>
       <div class="mt-5 d-flex align-items-center flex-column" v-if="modifyMsgId === ''">
         <textarea name="commentaire" class="col-10" placeholder="écrit ton commentaire ici !" v-model="newMsg"></textarea>
+        <img class="img-thumbnail" style="height:100px;" v-bind:src="myGIF" v-if="selectMedia === 'gif' ">
+        <img id="preview" class="img-thumbnail" style="max-height:200px;" v-if="selectMedia === 'file' ">
+
+        <div class="d-flex col-12" v-if=" selectMedia !== 'gif' ">
+          <input type="file" @change="checkMedia()" @click="selectMedia = 'file' "  v-if="selectMedia !== 'gif' " id="upload" name="file" class="form-control form-control-lg m-1" >
+          <input type="button" value="choisir un GIF" @click="selectMedia= 'gif' "  v-if="selectMedia !== 'file' " class="form-control form-control-lg m-1">
+        </div>
+
+        <div v-if=" selectMedia === 'gif' "> 
+            <input type="text" placeholder="chercher un GIF" v-model="valueSearchingGIF">
+            <input type="button" @click="searchingGIF()" value="chercher">
+            
+        </div>
+
+        <input class="mt-2" type="button" value="poster mon message" @click="createMsg">
         
-        <input type="file" @change="checkMedia()" id="upload" name="file">
-        <img id="preview" class="img-thumbnail" style="max-height:200px;" v-show="showMedia">
-        <input class="mt-2" type="button" value="poster" @click="createMsg">
+        <div class="d-flex flex-wrap col-12 border justify-content-center" >
+          <img  v-for=" gif in giflist" :key="gif.id" v-bind:src="gif.images.original.url" class="col-4 m-1" @click="myGIF = gif.images.original.url">
+        </div>
+      
       </div>
     </div>
   </div>
@@ -55,6 +73,8 @@
 import{ HTTP } from '../http-constants'
 import { mapState } from 'vuex'
 import { mapActions } from 'vuex'
+var GphApiClient = require('giphy-js-sdk-core')
+let client = GphApiClient("0wqBg77PwEJXOIzxuYCoD2cAVrB6mvOc")
 
 export default {
   computed:{
@@ -66,10 +86,13 @@ export default {
   data() {
     return {
       newMsg:'',
-      showMedia: false,
+      myGIF:'',
+      valueSearchingGIF:'',
       listMsg:'',
+      giflist:'',
       modifyMsgValue: '',
       modifyMsgId:'',
+      selectMedia: '',
       showModify: true,
     }
   },
@@ -112,9 +135,10 @@ export default {
       const formulaire = {
         id: this.idStore,
         pseudo: this.pseudoStore,
+        gif: this.myGIF,
         msg: this.newMsg
       }
-      if( this.showMedia === true){ //message envoyé avec un media
+      if( this.selectMedia === 'file' ){ //message envoyé avec un media
         const jsonResponse = JSON.stringify(formulaire)
         const form = new FormData();
         form.append("image", document.getElementById('upload').files[0], 'title.jpg');
@@ -136,25 +160,6 @@ export default {
           document.getElementById('errorMsg').innerText = err.response.data.error;
         })
       }
-    },
-
-
-    createMdsg() {
-      HTTP.defaults.headers.common['Authorization'] = `bearer ${this.tokenStore}`;
-      const formulaire = {
-        id: this.idStore,
-        pseudo: this.pseudoStore,
-        msg: this.newMsg,
-        idCanal: this.$route.params.idCanal,
-        idSujet: this.$route.params.idSujet,
-        }
-      HTTP.post('/messages/'+ this.$route.params.idCanal + '/' + this.$route.params.idSujet + '/create', formulaire)
-      .then(() =>{
-      this.$router.go({name: 'Sujet', params: {idCanal: this.$route.params.idCanal, idSujet: this.$route.params.idSujet}})
-      })
-      .catch(err =>{
-        document.getElementById('errorMsg').innerText = err.response.data.error;
-      })
     },
 
     modifyMsg(idCreator){
@@ -186,8 +191,6 @@ export default {
     },
 
     checkMedia(){
-      this.showMedia = true;
-
       var mediaPreview = new FileReader();
       mediaPreview.readAsDataURL(document.getElementById('upload').files[0]);
       mediaPreview.onload = function(file){
@@ -195,6 +198,17 @@ export default {
       }
     },
     
+    searchingGIF(){
+      client.search('gifs', {"q": this.valueSearchingGIF, "limit":10})
+      .then((response) => {
+          this.giflist = response.data;
+          console.log(this.giflist)
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+    },
+
   }
 }
 </script>

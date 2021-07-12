@@ -20,39 +20,59 @@ exports.getMsg= (req, res) => {
 
 //crée un message
 exports.createMsg= (req, res) => {
-  //si il n'y a pas de media
-  if((regex.test(req.body.msg) === true)){
-    if( req.file === undefined){
-      connection.execute(
-        "INSERT INTO list_msg SET id_user= ? , message= ? , date=SYSDATE(), position_canal= ?, position_sujet= ? ;",
-        [req.body.id, req.body.msg, req.params.idCanal, req.params.idSujet],
-        function(err, result){
-          if(err){
-            res.status(500).json({error: 'commande invalide'})
-          }
-          else if(result){
-            res.status(200).json({message: "message posté !"})
-          }
-      })
-    }
+
   //si il y a un media
-    else if( req.file !== undefined){
-      let response = JSON.parse(req.body.message)
-       let localMedia = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
-      connection.execute(
-        "INSERT INTO list_msg SET id_user= ? , message= ? , media=?, date=SYSDATE(), position_canal= ?, position_sujet= ? ;",
-        [response.id, response.msg, localMedia, req.params.idCanal, req.params.idSujet],
-        function(err, result){
-          if(err){
-            res.status(500).json({error: 'commande invalide'})
-          }
-          else if(result){
-            res.status(200).json({message: "message posté !"})
-          }
-      })
-    }
+  if( req.file !== undefined){
+    let response = JSON.parse(req.body.message)
+    let localMedia = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
+    connection.execute(
+      "INSERT INTO list_msg SET id_user= ? , message= ? , media=?, date=SYSDATE(), position_canal= ?, position_sujet= ? ;",
+      [response.id, response.msg, localMedia, req.params.idCanal, req.params.idSujet],
+      function(err, result){
+        if(err){
+          res.status(500).json({error: 'commande invalide'})
+        }
+        else if(result){
+          res.status(200).json({message: "message posté !"})
+        }
+    })
+    //si il y a juste du texte
   }else{
-    return res.status(405).json({ error: "Caractère non autorisé." });
+    //si il y a un gif 
+    if(req.body.gif != undefined){
+      if(req.body.msg === '' || (regex.test(req.body.msg) === true)){
+        connection.execute(
+          "INSERT INTO list_msg SET id_user= ? , message= ? , media= ? , date=SYSDATE() , position_canal= ?, position_sujet= ? ;",
+          [req.body.id, req.body.msg, req.body.gif, req.params.idCanal, req.params.idSujet],
+          function(err, result){
+            if(err){
+              res.status(500).json({error: 'commande invalide'})
+            }
+            else if(result){
+              res.status(200).json({message: "message posté !"})
+            }
+        })
+      }else {
+        return res.status(405).json({ error: "Caractère non autorisé." });
+      }
+      //si il n'y a pas de gif
+    }else{
+      if((regex.test(req.body.msg) === true)){
+        connection.execute(
+          "INSERT INTO list_msg SET id_user= ? , message= ? , date=SYSDATE() , position_canal= ? , position_sujet= ? ;",
+          [req.body.id, req.body.msg, req.params.idCanal, req.params.idSujet],
+          function(err, result){
+            if(err){
+              res.status(500).json({error: 'commande invalide'})
+            }
+            else if(result){
+              res.status(200).json({message: "message posté !"})
+            }
+        })
+      }else{
+        return res.status(405).json({ error: "Caractère non autorisé." });
+      }
+    }
   }
 };
 
