@@ -14,8 +14,6 @@
       <p v-if="$store.state.creatorSujetStore == null">par - utilisateur supprimé -</p>
 
       <div class="d-flex align-items-center flex-column">
-        
-        <div id="errorMsg" class="text-danger"></div>
         <div class="card col-11 text-start border border-primary" v-for="msg in listMsg" :key="msg.id">
           <div class="border-bottom border-secondary p-1">
             <div class="fw-bold fs-5" v-if="msg.name_user != null">{{msg.name_user}}</div>
@@ -30,6 +28,7 @@
             </div>
           </div>
           <div class="p-0 card" v-if="modifyMsgId === msg.id ">
+            <div id="errorMsg" class="text-danger text-center"></div>
             <textarea class="m-0 p-2 pt-4" v-model="modifyMsgValue"></textarea>
             <input class="m-0" type="button" value="modifier le message" @click="modifyMsg(msg.id_user)">
           </div>
@@ -38,16 +37,15 @@
             <img v-bind:src=" msg.media" class="img-thumbnail"  style="max-height:200px;">
           </div>
         </div>
-
-
-
       </div>
+
       <div class="mt-5 d-flex align-items-center flex-column" v-if="modifyMsgId === ''">
+      <div id="errorSendMsg" class="text-danger text-center"></div>
         <textarea name="commentaire" class="col-10" placeholder="écrit ton commentaire ici !" v-model="newMsg"></textarea>
-        <img class="img-thumbnail" style="height:100px;" v-bind:src="myGIF" v-if="selectMedia === 'gif' ">
+        <img class="img-thumbnail" style="height:100px;" v-bind:src="myGIF" v-if="myGIF !== '' ">
         <img id="preview" class="img-thumbnail" style="max-height:200px;" v-if="selectMedia === 'file' ">
 
-        <div class="d-flex col-12" v-if=" selectMedia !== 'gif' ">
+        <div class="d-flex flex-column col-10 col-md-7 col-lg-5 col-xl-4" v-if=" selectMedia !== 'gif' ">
           <input type="file" @change="checkMedia()" @click="selectMedia = 'file' "  v-if="selectMedia !== 'gif' " id="upload" name="file" class="form-control form-control-lg m-1" >
           <input type="button" value="choisir un GIF" @click="selectMedia= 'gif' "  v-if="selectMedia !== 'file' " class="form-control form-control-lg m-1">
         </div>
@@ -55,13 +53,12 @@
         <div v-if=" selectMedia === 'gif' "> 
             <input type="text" placeholder="chercher un GIF" v-model="valueSearchingGIF">
             <input type="button" @click="searchingGIF()" value="chercher">
-            
         </div>
 
-        <input class="mt-2" type="button" value="poster mon message" @click="createMsg">
+        <input class="mt-2" type="button" value="poster mon message" @click="createMsg" id="buttonSend">
         
         <div class="d-flex flex-wrap col-12 border justify-content-center" >
-          <img  v-for=" gif in giflist" :key="gif.id" v-bind:src="gif.images.original.url" class="col-4 m-1" @click="myGIF = gif.images.original.url">
+          <img  v-for=" gif in giflist" :key="gif.id" v-bind:src="gif.images.original.url" class=" m-1 img-thumbnail" style="max-height:300px;" @click="myGIF = gif.images.original.url">
         </div>
       
       </div>
@@ -131,6 +128,8 @@ export default {
     ... mapActions(['disconnect_user', 'select_sujet', 'new_user']),
 
     createMsg() {
+      let buttonSend = document.getElementById('buttonSend')
+      buttonSend.disabled = true
       HTTP.defaults.headers.common['Authorization'] = `bearer ${this.tokenStore}`;
       const formulaire = {
         id: this.idStore,
@@ -148,7 +147,8 @@ export default {
           this.$router.go({name: 'Sujet', params: {idCanal: this.$route.params.idCanal, idSujet: this.$route.params.idSujet}})
         })
         .catch(err =>{
-          document.getElementById('errorMsg').innerText = err.response.data.error;
+          buttonSend.disabled = false
+          document.getElementById('errorSendMsg').innerText = err.response.data.error;
         })
       
       }else { //message envoyé sans media
@@ -157,7 +157,8 @@ export default {
         this.$router.go({name: 'Sujet', params: {idCanal: this.$route.params.idCanal, idSujet: this.$route.params.idSujet}})
         })
         .catch(err =>{
-          document.getElementById('errorMsg').innerText = err.response.data.error;
+          buttonSend.disabled = false
+          document.getElementById('errorSendMsg').innerText = err.response.data.error;
         })
       }
     },
@@ -201,11 +202,10 @@ export default {
     searchingGIF(){
       client.search('gifs', {"q": this.valueSearchingGIF, "limit":10})
       .then((response) => {
-          this.giflist = response.data;
-          console.log(this.giflist)
+        this.giflist = response.data;
       })
       .catch((err) => {
-        console.log(err)
+        document.getElementById('errorSendMsg').innerText = err.response.data.error;
       })
     },
 

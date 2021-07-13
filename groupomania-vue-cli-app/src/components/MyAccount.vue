@@ -15,22 +15,20 @@
         <div id="successMsg" class="alert-success text-center"></div>
         <div id="errorMsg" class="alert-danger text-center"></div>
 
-      <div v-if="tokenStore !== ''">
+      <div class="d-flex flex-column align-items-center" v-if="tokenStore !== ''">
         <div class="d-flex mt-4 align-items-center"> connecté en tant que: <div class="mx-2 fw-bold fs-5 d-flex"> {{$store.state.pseudoStore}} </div></div>
-        <input type="button" value="changer de pseudo" class="mt-2 col-6" @click="showPseudo = !showPseudo" v-show="showPseudo">
+        <input type="button" value="changer de pseudo" class="mt-2 col-8 col-sm-4 col-md-3 col-lg-2 col-xl-2" @click="showPseudo = !showPseudo" v-show="showPseudo">
       
         
         <form method="post" v-show="!showPseudo">
-          <fieldset class="my-4">
-            <div>
+          <fieldset class="my-4 border">
               <label for="pseudo" class="mx-3" > nouveau pseudo: </label> 
             <input type="text" name="pseudo" v-model="newPseudo" >
-          </div>
-          <input type="button" value="je change de pseudo" class="my-3" @click="modifyAccount">
+          <input type="button" value="je change de pseudo" class="m-3" @click="modifyAccount">
           </fieldset>
           </form>
 
-        <div class="text-center my-2">
+        <div class="text-center mt-5">
           <router-link to="/myAccount/delete">supprimer mon compte</router-link>
         </div>
 
@@ -80,9 +78,12 @@ export default {
       })
       .then(() =>{
         this.$store.dispatch('change_pseudo',this.newPseudo);
+        this.newPseudo= '';
         document.getElementById('successMsg').innerText = "votre pseudo à été mis à jour ! ";
+        document.getElementById('errorMsg').innerText = "";
       })
       .catch(err =>{
+        document.getElementById('successMsg').innerText = "";
         document.getElementById('errorMsg').innerText = err.response.data.error;
       })
     },

@@ -52,21 +52,26 @@ routes
 informations suplémentaire
 -en cours-
 
-api key pour giphy
-0wqBg77PwEJXOIzxuYCoD2cAVrB6mvOc
 
-integrer l'ajout de fichier
-integrer l'utilisation de gify
+mettre un bloqueur sur les boutons pour eviter les doubles appels
+modifier bootstrap pour le rendre 100% responsive
+renommer les tables et les colonnes dans la BDD
+personaliser les erreurs front et back
 ajuster les regex
 placer des regex sur le front
 
-modifier bootstrap pour le rendre 100% responsive
 tester toutes les routes
-personaliser les erreurs front et back
-renommer les des tables et les colonnes dans la BDD
-mettre un bloqueur sur les boutons pour eviter les doubles appels
 mettre le code au propre
 
-bonux
-supprimer aussi le sujet quand le dernier message est suprimé
 
+click sur modifier/ajouter
+	montre ajouter, modifier, suprimer
+	suprime modifier/ajouter
+
+click sur ajouter
+	montre comment ajouter
+	supprime ajouter, modifier, suprimer
+
+click sur modifier
+	montre comment modifier
+	supprime ajouter, modifier,, suprimer

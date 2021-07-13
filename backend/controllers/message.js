@@ -20,7 +20,6 @@ exports.getMsg= (req, res) => {
 
 //crée un message
 exports.createMsg= (req, res) => {
-
   //si il y a un media
   if( req.file !== undefined){
     let response = JSON.parse(req.body.message)
@@ -39,7 +38,7 @@ exports.createMsg= (req, res) => {
     //si il y a juste du texte
   }else{
     //si il y a un gif 
-    if(req.body.gif != undefined){
+    if(req.body.gif !== ''){
       if(req.body.msg === '' || (regex.test(req.body.msg) === true)){
         connection.execute(
           "INSERT INTO list_msg SET id_user= ? , message= ? , media= ? , date=SYSDATE() , position_canal= ?, position_sujet= ? ;",
@@ -56,7 +55,7 @@ exports.createMsg= (req, res) => {
         return res.status(405).json({ error: "Caractère non autorisé." });
       }
       //si il n'y a pas de gif
-    }else{
+    }else if(req.body.msg !== ''){
       if((regex.test(req.body.msg) === true)){
         connection.execute(
           "INSERT INTO list_msg SET id_user= ? , message= ? , date=SYSDATE() , position_canal= ? , position_sujet= ? ;",
@@ -72,6 +71,8 @@ exports.createMsg= (req, res) => {
       }else{
         return res.status(405).json({ error: "Caractère non autorisé." });
       }
+    }else{
+      return res.status(405).json({ error: "votre message est vide." });
     }
   }
 };
@@ -93,7 +94,7 @@ exports.getNewMsg= (req, res) => {
 
 //modifie son message
 exports.modifyMyMsg= (req, res) => {
-  if((regex.test(req.body.msg) === true)){
+  if(req.body.newMsg !=='' && (regex.test(req.body.newMsg) === true)){
     connection.execute(
       "UPDATE list_msg SET message= ? , date= NOW() WHERE id= ? ;",
       [req.body.newMsg, req.body.idMsg],
@@ -104,7 +105,9 @@ exports.modifyMyMsg= (req, res) => {
         else if(result){
         res.status(200).json({message: "message modifié !"})
         }
-    })  
+    })
+  }else if(req.body.newMsg === ''){
+    return res.status(405).json({ error: "Votre message est vide" });
   }else{
     return res.status(405).json({ error: "Caractère non autorisé." });
   }

@@ -23,27 +23,26 @@
       </div>
 
           <div class="col-1 d-flex flex-column p-0 fs-6 justify-content-around" v-if="sujet.id_creator === idStore || statusStore === 1">
-            <i class="fas fa-cog btn-warning py-2" v-show="showModif" @click="showChangeNameSujet = !showChangeNameSujet; idChangeSujet= sujet.id, nameChangeSujet=sujet.nom_sujet, idCreator=sujet.id_creator"></i>
-            <i class="fas fa-trash-alt btn-danger py-1" v-show="showModif" @click="destroySujet(sujet.id, sujet.id_creator)"></i>
+            <i class="fas fa-cog btn-warning py-2" v-show="showModif && !showChangeNameSujet" @click="showChangeNameSujet = !showChangeNameSujet; idChangeSujet= sujet.id, nameChangeSujet=sujet.nom_sujet, idCreator=sujet.id_creator"></i>
+            <i class="fas fa-trash-alt btn-danger py-1" v-show="showModif && !showChangeNameSujet" @click="destroySujet(sujet.id, sujet.id_creator)"></i>
           </div>
       </div>
       
       <div id="errorMsg" class="text-danger"></div>
 
-      <form class="d-flex justify-content-center row " method="post">
-        <fieldset class="text-center my-4" v-show="showChangeNameSujet">
+      <div class="d-flex flex-column align-items-center mt-4 ">
+        <input type="button" value="nouveau sujet" class="m-1 col-11 col-sm-6 col-md-5 col-lg-4 col-xl-3" v-show="!showModif" @click="newSujet">
+        <input type="button" value="supprimer/modifier un sujet" class="col-11 col-sm-6 col-md-5 col-lg-4 col-xl-3" @click="showModif = !showModif" v-show="!showModif" >
+      </div>
+
+      <form method="post">
+        <fieldset class="text-center my-4 flex-column align-items-center" v-show="showChangeNameSujet">
           <label for="title" class=""> titre du sujet: </label>
-          <input type="text" name="title" placeholder="titre du forum" class="m-2 col-6" v-model="nameChangeSujet">
-          <input type="button" value="ajouter" class="col-3" @click="modifySujet" >
+          <input type="text" name="title" placeholder="titre du forum" class="m-2 col-8" v-model="nameChangeSujet">
+          <input type="button" value="ajouter" class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1" @click="modifySujet" >
         </fieldset>
       </form>
 
-      <div class="d-flex justify-content-center row mt-4 " >
-      
-        <input type="button" value="nouveau sujet" class="m-1 col-6" v-show="!showModif" @click="newSujet">
-        <input type="button" class="m-1 col-6" value="supprimer/modifier un sujet" @click="showModif = !showModif" >
-      
-      </div> 
     </div>
   </div>
 </template>
