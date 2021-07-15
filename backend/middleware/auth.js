@@ -6,7 +6,7 @@ exports.getAuth= (req, res, next) => {
         const token = req.headers.authorization.split(' ')[1];
         const decodedToken = jwt.verify(token, '487b05ac-0e11-4720-a02b-c36806ea094c');
         const userId = decodedToken.id;
-        if( req.body.id && req.body.id !== userId ){
+        if( req.body.id && req.body.id != userId ){
             return res.status(500).json({error: "Identifiant non valide."});
         }else{
             next();
@@ -31,7 +31,7 @@ exports.sensibleAuth= (req, res, next) => {
                 [userId],
                 function(err, result){
                     //si l'utilisateur est un moderateur
-                    if(result[0].status === 1){
+                    if(result[0].status == 1){
                         next()
                     }
                     //si l'utilisateur n'est pas moderateur
@@ -46,21 +46,21 @@ exports.sensibleAuth= (req, res, next) => {
                 [userId],
                 function(err, result){
                     //si l'utilisateur est un modo
-                    if(result[0].status === 1){
+                    if(result[0].status == 1){
                         next();
                     }
                     //si l'utilisateur n'est pas modo
-                    else if(result[0].status === 0){
+                    else if(result[0].status == 0){
                         connection.execute(
                             "SELECT id_user FROM list_sujet WHERE id= ? ;",
                             [req.body.idSujet],
                             function(err, result){
                                 //si l'utilisateur est l'auteur du sujet
-                                if(result[0].id_user === userId){
+                                if(result[0].id_user == userId){
                                     next();
                                 }
                                 //si l'utilisateur n'est pas l'auteur du sujet
-                                else if(result[0].id_user !== userId){
+                                else if(result[0].id_user != userId){
                                     return res.status(403).json({error: "Action non autorisé."});
                                 }
                                 else{
@@ -77,21 +77,21 @@ exports.sensibleAuth= (req, res, next) => {
                 [userId],
                 function(err, result){
                     //si l'utilisateur est un modo
-                    if(result[0].status === 1){
+                    if(result[0].status == 1){
                         next();
                     }
                     //si l'utilisateur n'est pas modo
-                    else if(result[0].status === 0){
+                    else if(result[0].status == 0){
                         connection.execute(
                             "SELECT id_user FROM list_msg WHERE id= ? ;",
-                            [req.body.idMsg],
+                            [req.params.idMsg],
                             function(err, result){
                                 //si l'utilisateur est l'auteur du sujet
-                                if(result[0].id_user === userId){
+                                if(result[0].id_user == userId){
                                     next();
                                 }
                                 //si l'utilisateur n'est pas l'auteur du sujet
-                                else if(result[0].id_user !== userId){
+                                else if(result[0].id_user != userId){
                                     return res.status(403).json({error: "Action non autorisé."});
                                 }
                                 else{
@@ -122,7 +122,7 @@ exports.deleteAuth = (req, res, next) => {
                     [userId],
                     function(err, result){
                         //si l'utilisateur est un modo
-                        if(result[0].status === 1){
+                        if(result[0].status == 1){
                             next();
                         }
                         //si l'utilisateur n'est pas un modo
@@ -137,21 +137,21 @@ exports.deleteAuth = (req, res, next) => {
                     [userId],
                     function(err, result){
                         //si l'utilisateur est un modo
-                        if(result[0].status === 1){
+                        if(result[0].status == 1){
                             next()
                         }
                         //si l'utilisateur n'est pas modo
-                        else if(result[0].status === 0){
+                        else if(result[0].status == 0){
                             connection.execute(
                                 "SELECT id_user FROM list_sujet WHERE id= ? ;",
                                 [req.params.idSujet],
                                 function(err, result){
                                     //si l'utilisateur est l'auteur du sujet
-                                    if(result[0].id_user === userId){
+                                    if(result[0].id_user == userId){
                                         next()
                                     }
                                     //si l'utilisateur n'est pas l'auteur du sujet
-                                    else if(result[0].id_user !== userId){
+                                    else if(result[0].id_user != userId){
                                         return res.status(403).json({error: "Action non autorisé."})
                                     }
                                     else{
@@ -168,21 +168,21 @@ exports.deleteAuth = (req, res, next) => {
                     [userId],
                     function(err, result){
                         //si l'utilisateur est un modo
-                        if(result[0].status === 1){
+                        if(result[0].status == 1){
                             next();
                         }
                         //si l'utilisateur n'est pas modo
-                        else if(result[0].status === 0){
+                        else if(result[0].status == 0){
                             connection.execute(
                                 "SELECT id_user FROM list_msg WHERE id= ? ;",
                                 [req.params.idMsg],
                                 function(err, result){
                                     //si l'utilisateur est l'auteur du message
-                                    if(result[0].id_user === userId){
+                                    if(result[0].id_user == userId){
                                         next();
                                     }
                                     //si l'utilisateur n'est pas l'auteur du message
-                                    else if(result[0].id_user !== userId){
+                                    else if(result[0].id_user != userId){
                                         return res.status(403).json({error: "Action non autorisé."});
                                     }
                                     else{

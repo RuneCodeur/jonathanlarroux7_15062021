@@ -29,7 +29,7 @@
       <div id="errorMsg" class="text-danger"></div>
 
 
-      <div class="d-flex justify-content-center row mt-4" v-if="statusStore === 1">
+      <div class="d-flex justify-content-center row mt-4" v-if="statusStore == 1">
         <input type="button" class="m-1 col-10 col-sm-6 col-md-4 col-lg-3 col-xl-3" value="supprimer/modifier un forum" @click="showModif = !showModif" v-show="!showModif">
         <input type="button" class="m-1 col-9 col-sm-6 col-md-4 col-lg-3 col-xl-3" value="ajouter un forum" @click="showAddForum = !showAddForum" v-show="showModif && !showAddForum && !showChangeNameForum  && !showDeleteForum">
         
@@ -37,7 +37,7 @@
           <fieldset class="my-4 align-items-center flex-column col-6 " v-show="showAddForum">
             <label for="title"> Titre du forum </label>
             <input type="text" class="my-2 col-12" name="title" placeholder="titre du forum" v-model="forumName">
-            <input type="button" class="col-9 col-sm-6 col-md-4 col-lg-3 col-xl-3" value="ajouter" @click="newForum" >
+            <input type="button" class="col-9 col-sm-6 col-md-4 col-lg-3 col-xl-3" value="ajouter" @click="newForum()" >
           </fieldset>
 
           <fieldset class="my-4 align-items-center flex-column col-6" v-show="showChangeNameForum" >
@@ -119,7 +119,7 @@ export default{
           this.$router.go({name: 'Welcome'});
         })
         .catch(err => {
-          document.getElementById('errorMsg').innerText = err.response.data.error;
+          document.getElementById('errorMsg').innerText = 'erreur '+ err.response.status +' : ' + err.response.data.error;
         });
     },
 

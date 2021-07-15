@@ -1,3 +1,4 @@
+const nl2br  = require('nl2br');
 const connection = require('../connect');
 
 //obtient la liste de tout les forums
@@ -64,7 +65,7 @@ exports.createSujet= (req, res) => {
       .then(() =>{
         return connection.promise().execute(
           "INSERT INTO list_msg SET id_user= ? , message= ? , date= SYSDATE(), id_forum= ? , id_sujet= ( SELECT id FROM list_sujet ORDER BY id DESC LIMIT 0,1 ) ;",
-          [req.body.id, req.body.msg, req.params.idForum]
+          [req.body.id, nl2br(req.body.msg), req.params.idForum]
         )
       })
       .then(() =>{

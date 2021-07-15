@@ -22,7 +22,7 @@
           <div class="col-4 border d-flex flex-column justify-content-around p-3" v-if="sujet.pseudo_creator == null"> Utilisateur supprimé </div>
       </div>
 
-          <div class="col-1 d-flex flex-column p-0 fs-6 justify-content-around" v-if="sujet.id_creator === idStore || statusStore === 1">
+          <div class="col-1 d-flex flex-column p-0 fs-6 justify-content-around" v-if="sujet.id_creator === idStore || statusStore == 1">
             <i class="fas fa-cog btn-warning py-2" v-show="showModif && !showChangeNameSujet && !showDeleteSujet" @click="showChangeNameSujet = !showChangeNameSujet; idChangeSujet= sujet.id, nameChangeSujet=sujet.nom_sujet, idCreator=sujet.id_creator"></i>
             <i class="fas fa-trash-alt btn-danger py-1" v-show="showModif && !showChangeNameSujet && !showDeleteSujet" @click="destroySujet(sujet.id)"></i>
           </div>

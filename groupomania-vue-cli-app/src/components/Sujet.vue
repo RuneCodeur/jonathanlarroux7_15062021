@@ -22,8 +22,8 @@
             <div class="fw-bold fs-5" v-if="msg.name_user == null"> - Utilisateur supprimé - </div>
             <div class="row m-0"> 
               <div class="fst-italic p-0 col-8 border"> le {{msg.date}} </div>
-              <div class="col-4" v-if="msg.id_user === idStore || statusStore === 1">
-                <i class="fas fa-cog btn-warning py-2 col-6 text-center" @click="modifyMsgId = msg.id, modifyMsgValue = msg.message, showModify = !showModify" v-show="!showModify && !showDelete"></i>
+              <div class="col-4" v-if="msg.id_user === idStore || statusStore == 1">
+                <i class="fas fa-cog btn-warning py-2 col-6 text-center" @click="modifyMsgId = msg.id, modifyMsgValue = msg.message.replaceAll('<br />', ' '), showModify = !showModify" v-show="!showModify && !showDelete"></i>
                 <i class="fas fa-trash-alt btn-danger py-2 col-6 text-center" @click="destroyMsg(msg.id)" v-show="!showModify && !showDelete"></i>
               </div>
             </div>
@@ -176,10 +176,9 @@ export default {
       const formulaire = {
         id: this.idStore,
         newMsg: this.modifyMsgValue,
-        idMsg: idCreator,
       };
       HTTP.defaults.headers.common['Authorization'] = `bearer ${this.tokenStore}`;
-      HTTP.put('/messages/'+ this.$route.params.idForum + '/' + this.$route.params.idSujet + '/' + this.modifyMsgId, formulaire)
+      HTTP.put('/messages/'+ this.$route.params.idForum + '/' + this.$route.params.idSujet + '/' +idCreator, formulaire)
       .then(()=>{
       this.$router.go({name: 'Sujet', params: {idForum: this.$route.params.idForum, idSujet: this.$route.params.idSujet}});
       })

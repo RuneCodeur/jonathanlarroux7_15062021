@@ -1,6 +1,6 @@
-var nl2br  = require('nl2br');
+const nl2br  = require('nl2br');
 const connection = require('../connect');
-let fs = require('fs');
+const fs = require('fs');
 
 //obtient la liste de tout les messages du sujet
 exports.getMsg= (req, res) => {
@@ -26,7 +26,7 @@ exports.createMsg= (req, res) => {
     let localMedia = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
     connection.execute(
       "INSERT INTO list_msg SET id_user= ? , message= ? , media= ? , date= SYSDATE(), id_forum= ?, id_sujet= ? ;",
-      [response.id, nl2br( response.msg), localMedia, req.params.idForum, req.params.idSujet],
+      [response.id, nl2br(response.msg), localMedia, req.params.idForum, req.params.idSujet],
       function(err, result){
         if(err){
           res.status(500).json({error: "commande invalide"});
@@ -72,7 +72,7 @@ exports.createMsg= (req, res) => {
 //obtient la liste de tout les messages récents
 exports.getNewMsg= (req, res) => {
   connection.execute(
-    "SELECT list_msg.message AS message, list_msg.id_user AS id_user, users.pseudo AS pseudo, list_msg.media AS media, DATE_FORMAT(list_msg.date, '%d/%m/%Y à %HH%i') as date, list_msg.id_forum AS idForum, list_msg.id_sujet AS idSujet, list_sujet.nom_sujet AS nomSujet, list_forum.nom_Forum AS nomForum FROM list_msg LEFT OUTER JOIN list_forum ON list_msg.id_Forum = list_forum.id LEFT OUTER JOIN list_sujet ON list_msg.id_sujet = list_sujet.id LEFT OUTER JOIN users ON list_msg.id_user = users.id ORDER BY date DESC LIMIT 10 ;",
+    "SELECT list_msg.message AS message, list_msg.id_user AS id_user, users.pseudo AS pseudo, list_msg.media AS media, DATE_FORMAT(list_msg.date, '%d/%m/%Y à %HH%i') as date, list_msg.id_forum AS idForum, list_msg.id_sujet AS idSujet, list_sujet.nom_sujet AS nomSujet, list_forum.nom_Forum AS nomForum FROM list_msg JOIN list_forum ON list_msg.id_Forum = list_forum.id JOIN list_sujet ON list_msg.id_sujet = list_sujet.id JOIN users ON list_msg.id_user = users.id ORDER BY date DESC LIMIT 10 ;",
     function(err, result){
       if(err){
         res.status(500).json({error: 'commande invalide'});
@@ -88,8 +88,8 @@ exports.getNewMsg= (req, res) => {
 exports.modifyMyMsg= (req, res) => {
   if(req.body.newMsg !== ''){
     connection.execute(
-      "UPDATE list_msg SET message= ? , date= SYSDATE() WHERE id= ? ;",
-      [req.body.newMsg, req.body.idMsg],
+      "UPDATE list_msg SET message= ? WHERE id= ? ;",
+      [nl2br(req.body.newMsg), req.params.idMsg],
       function(err, result){
         if(err){
           res.status(500).json({error: 'commande invalide'});

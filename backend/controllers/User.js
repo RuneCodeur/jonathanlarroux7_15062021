@@ -42,7 +42,7 @@ exports.login = (req, res) => {
           if(response[0] == undefined ){
             res.status(405).json({error: "Utilisateur non trouvé."});
           }else{
-            bcrypt.compare(req.query.mdp, response[0].mdp, function(err, result){ 
+            bcrypt.compare(req.query.mdp, response[0].mdp, function(err, result){
               if(result === true){
               res.status(200).json({
               id: response[0].id,
