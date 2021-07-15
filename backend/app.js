@@ -1,13 +1,14 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path');
+const xss = require('xss-clean')
 const helmet = require('helmet');
-const rateLimit = require("express-rate-limit");
 const connection = require('./connect');
+const rateLimit = require("express-rate-limit");
 
+const forumRoutes = require('./routes/forum');
 const messagesRoutes = require('./routes/message');
 const userRoutes = require('./routes/user');
-const canalRoutes = require('./routes/canal');
 
 const limiter = rateLimit({
   windowMs: 60 * 1000, 
@@ -38,12 +39,13 @@ app.use((req, res, next) => {
 app.use(bodyParser.json());
 app.use(helmet());
 app.use(limiter);
+app.use(xss());
 
 app.use('/images', express.static(path.join(__dirname, 'images')));
 
 //routes
+app.use('/api/forum', forumRoutes);
 app.use('/api/messages', messagesRoutes);
 app.use('/api/auth', userRoutes);
-app.use('/api/canal', canalRoutes);
 
 module.exports = app;

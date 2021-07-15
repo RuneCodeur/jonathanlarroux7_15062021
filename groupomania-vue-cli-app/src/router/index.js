@@ -12,8 +12,8 @@ const routes = [
     component: () => import('../components/Inscription'),
   },
   {
-    path: '/forum',
-    name: 'Forum',
+    path: '/welcome',
+    name: 'Welcome',
     component: () => import('../components/Forum'),
   },
   {
@@ -32,17 +32,17 @@ const routes = [
     component: () => import('../components/DeleteAccount'),
   },
   {
-    path: '/sujet/:idCanal',
+    path: '/sujet/:idForum',
     name: 'SujetList',
     component: () => import('../components/SujetList'),
   },
   {
-    path: '/sujet/:idCanal/:idSujet',
+    path: '/sujet/:idForum/:idSujet',
     name: 'Sujet',
     component: () => import('../components/Sujet'),
   },
   {
-    path: '/sujet/:idCanal/create',
+    path: '/sujet/:idForum/create',
     name: 'SujetCreate',
     component: () => import('../components/SujetCreate'),
   },

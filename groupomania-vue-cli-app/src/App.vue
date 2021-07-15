@@ -14,6 +14,7 @@
     <div><i class="fas fa-phone-alt mr-2"></i> 08.12.12.12.12</div>
     <div><i class="fas fa-envelope mr-2"></i> groupomania@gmail.com</div>
   </footer>
+  
   </div>
 </template>
 

@@ -53,25 +53,8 @@ informations suplémentaire
 -en cours-
 
 
-mettre un bloqueur sur les boutons pour eviter les doubles appels
-modifier bootstrap pour le rendre 100% responsive
-renommer les tables et les colonnes dans la BDD
-personaliser les erreurs front et back
-ajuster les regex
-placer des regex sur le front
 
-tester toutes les routes
-mettre le code au propre
+checker le package.json
+mettre au propre le repo github
 
-
-click sur modifier/ajouter
-	montre ajouter, modifier, suprimer
-	suprime modifier/ajouter
-
-click sur ajouter
-	montre comment ajouter
-	supprime ajouter, modifier, suprimer
-
-click sur modifier
-	montre comment modifier
-	supprime ajouter, modifier,, suprimer
+ecrire le readme

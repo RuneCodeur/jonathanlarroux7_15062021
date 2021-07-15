@@ -6,8 +6,8 @@ export default createStore({
     pseudoStore:'',
     idStore:'',
     statusStore:'',
-    idCanalStore:'',
-    nameCanalStore:'',
+    idForumStore:'',
+    nameForumStore:'',
     idSujetStore:'',
     nameSujetStore:'',
     creatorSujetStore:'',
@@ -20,13 +20,13 @@ export default createStore({
       state.idStore = res.id
       state.statusStore = res.status
     },
-    value_canal(state, res){
-      state.idCanalStore = res.idCanal
-      state.nameCanalStore = res.nameCanal
+    value_forum(state, res){
+      state.idForumStore = res.idForum
+      state.nameForumStore = res.nameForum
     },
     value_sujet(state, res){
-      state.idCanalStore = res.idCanal
-      state.nameCanalStore = res.nameCanal
+      state.idForumStore = res.idForum
+      state.nameForumStore = res.nameForum
       state.idSujetStore = res.idSujet
       state.nameSujetStore = res.nameSujet
       state.creatorSujetStore = res.creatorSujet
@@ -36,8 +36,8 @@ export default createStore({
     },
     position_sessionStorage(state, res){
       let response = {
-        idCanal: res.idCanal,
-        nameCanal: res.nameCanal,
+        idForum: res.idForum,
+        nameForum: res.nameForum,
         idSujet: res.idSujet,
         nameSujet: res.nameSujet,
         creatorSujet: res.creatorSujet,
@@ -63,8 +63,8 @@ export default createStore({
       localStorage.clear();
     },
 
-    select_canal(context, res){
-      context.commit('value_canal', res)
+    select_forum(context, res){
+      context.commit('value_forum', res)
       context.commit('position_sessionStorage', res)
     },
 

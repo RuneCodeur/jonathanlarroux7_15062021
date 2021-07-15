@@ -1,27 +1,31 @@
 <template>
-  <div class="delete text-center">
+  <div class="deleteAccount">
 
     <nav class="navbar-brand m-0 text-center fs-6 d-flex flex-wrap justify-content-center border">
-      <router-link to="/news" class="mx-3">news</router-link>
-      <router-link to="/forum" class="mx-3">forum</router-link>
-      <router-link to="/myAccount" class="mx-3">mon profil</router-link>
-      <router-link to="/" class="mx-3" @click="disconnect_user()">me deconnecter</router-link>
+      <router-link to="/news" class="mx-3"> News </router-link>
+      <router-link to="/welcome" class="mx-3"> Forum </router-link>
+      <router-link to="/myAccount" class="mx-3"> Mon profil </router-link>
+      <router-link to="/" class="mx-3" @click="disconnect_user()"> Me deconnecter </router-link>
     </nav>
-    <div ><div v-if="tokenStore !== ''"></div>
-      <h2>suppression du compte</h2>
+
+    <div class="text-center">
+      <h2> Suppression du compte </h2>
       <div class="d-flex container flex-column alert alert-warning fs-4">
-        Attention : la suppression du compte <div class="mx-2 fw-bold fs-2">{{$store.state.pseudoStore}}</div> est irréversible !
+        Attention: la suppression du compte 
+        <div class="mx-2 fw-bold fs-2"> {{$store.state.pseudoStore}} </div>
+        est irréversible !
       </div>
       
         <div id="errorMsg" class="text-danger"></div>
 
-      <input type="button" value="je supprime mon compte" class="my-4 fs-4 btn-danger p-2" @click="deleteAccount">
+      <input type="button" id="buttonDelete" value="Je supprime mon compte" class="my-4 fs-4 btn-danger p-2" @click="deleteAccount()">
     </div>
+
   </div>
 </template>
 
 <script>
-import{HTTP} from '../http-constants'
+import { HTTP } from '../http-constants'
 import { mapState } from 'vuex'
 import { mapActions } from 'vuex'
 
@@ -34,10 +38,10 @@ export default {
   created() {
     if(this.tokenStore == ''){
       if(localStorage.getItem('user')){
-      let userStorage = JSON.parse(localStorage.getItem('user'))
+      let userStorage = JSON.parse(localStorage.getItem('user'));
       this.$store.dispatch('new_user', userStorage);
       }else{
-        this.$router.push('/')
+        this.$router.push('/');
       }
     }
   },
@@ -45,6 +49,7 @@ export default {
   methods: {
     ... mapActions(['disconnect_user']),
     deleteAccount(){
+      document.getElementById('buttonDelete').disabled = true;
       HTTP.defaults.headers.common['Authorization'] = `bearer ${this.tokenStore}`;
       HTTP.delete('auth/delete', {
         params:{
@@ -57,7 +62,8 @@ export default {
         this.$router.push('/');
       })
       .catch(err =>{
-        document.getElementById('errorMsg').innerText = err.response.data.error;
+        document.getElementById('buttonDelete').disabled = false;
+        document.getElementById('errorMsg').innerText = 'erreur '+ err.response.status +' : ' + err.response.data.error;
       })
     },
 

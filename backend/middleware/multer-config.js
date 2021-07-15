@@ -1,5 +1,4 @@
 const multer = require ('multer');
-let regex = new RegExp("^[A-Za-z-éèêëçàâùï€$£_'.;:,@?!()\n 0-9]+$");
 
 const MIM_TYPES = {
     'image/jpg': 'jpg',
