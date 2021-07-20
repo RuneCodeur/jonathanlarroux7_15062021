@@ -50,8 +50,9 @@ exports.createMsg= (req, res) => {
             res.status(200).json({message: "message posté !"});
           }
       })
+    }
       //si il n'y a pas de gif
-    }else if(req.body.msg !== ''){
+      else if(req.body.msg !== ''){
       connection.execute(
         "INSERT INTO list_msg SET id_user= ? , message= ? , date=SYSDATE() , id_forum= ? , id_sujet= ? ;",
         [req.body.id, nl2br(req.body.msg), req.params.idForum, req.params.idSujet],

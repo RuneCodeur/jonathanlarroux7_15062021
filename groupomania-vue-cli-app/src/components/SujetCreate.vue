@@ -56,6 +56,7 @@ export default{
       this.$store.dispatch('new_user', userStorage);
       this.$store.dispatch('select_sujet', positionStorage);
       }else{
+        this.$store.dispatch('disconnect_user');
         this.$router.push('/');
       }
     }

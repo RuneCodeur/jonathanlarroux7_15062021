@@ -42,7 +42,6 @@ export default{
 
   data() {
     return {
-      pseudo:'',
       mdp:'',
       mail:'',
     }
@@ -67,8 +66,7 @@ export default{
   methods: {
     ... mapActions(['new_user']),
     connection() {
-      let connectButton = document.getElementById('connect-button');
-      connectButton.disabled = true;
+      document.getElementById('connect-button').disabled = true;
       HTTP.get('/auth/login/', {
         params:{
           mail: this.mail,
@@ -81,7 +79,7 @@ export default{
       })
       .catch(err => {
         document.getElementById('errorMsg').innerText = 'erreur '+ err.response.status +' : ' + err.response.data.error;
-        connectButton.disabled = false;
+        document.getElementById('connect-button').disabled = false;
       });
     },
 

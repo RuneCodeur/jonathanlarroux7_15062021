@@ -30,26 +30,27 @@ exports.sensibleAuth= (req, res, next) => {
                 "SELECT status FROM users WHERE id= ? LIMIT 1;",
                 [userId],
                 function(err, result){
-                    //si l'utilisateur est un moderateur
+                    //si l'utilisateur est un modérateur
                     if(result[0].status == 1){
                         next()
                     }
-                    //si l'utilisateur n'est pas moderateur
+                    //si l'utilisateur n'est pas modérateur
                     else{
                         return res.status(403).json({error: "Action non autorisé."});
                     }
             })
-        //si je modifie un sujet
-        }else if(req.route.path === "/:idForum/modifySujet"){
+        }
+        //modification d'un sujet
+        else if(req.route.path === "/:idForum/modifySujet"){
             connection.execute(
                 "SELECT status FROM users WHERE id= ? LIMIT 1 ;",
                 [userId],
                 function(err, result){
-                    //si l'utilisateur est un modo
+                    //si l'utilisateur est un modérateur
                     if(result[0].status == 1){
                         next();
                     }
-                    //si l'utilisateur n'est pas modo
+                    //si l'utilisateur n'est pas modérateur
                     else if(result[0].status == 0){
                         connection.execute(
                             "SELECT id_user FROM list_sujet WHERE id= ? ;",
@@ -70,17 +71,17 @@ exports.sensibleAuth= (req, res, next) => {
                     }
             })
         }
-        //si je modifie un message
+        //modification d'un message
         else if(req.route.path === "/:idForum/:idSujet/:idMsg"){
             connection.execute(
                 "SELECT status FROM users WHERE id= ? LIMIT 1 ;",
                 [userId],
                 function(err, result){
-                    //si l'utilisateur est un modo
+                    //si l'utilisateur est un modérateur
                     if(result[0].status == 1){
                         next();
                     }
-                    //si l'utilisateur n'est pas modo
+                    //si l'utilisateur n'est pas modérateur
                     else if(result[0].status == 0){
                         connection.execute(
                             "SELECT id_user FROM list_msg WHERE id= ? ;",

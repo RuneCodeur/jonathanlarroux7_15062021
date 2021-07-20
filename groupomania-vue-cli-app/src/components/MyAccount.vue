@@ -46,7 +46,7 @@
 import { HTTP } from '../http-constants'
 import { mapState } from 'vuex'
 import { mapActions } from 'vuex'
-let regex = new RegExp ('^([a-zA-Z0-9]){3,20}$')
+let regex = new RegExp ('^([a-zA-Z0-9_-]){3,20}$')
 
 export default { 
   computed:{... mapState(['tokenStore','pseudoStore', 'idStore']),
@@ -67,6 +67,7 @@ export default {
       let userStorage = JSON.parse(localStorage.getItem('user'));
       this.$store.dispatch('new_user', userStorage);
       }else{
+        this.$store.dispatch('disconnect_user');
         this.$router.push('/');
       }
     }

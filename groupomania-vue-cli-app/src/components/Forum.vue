@@ -88,9 +88,15 @@ export default{
           this.listForum = response.data.result;
         })
         .catch(err => {
-          document.getElementById('errorMsg').innerText = err.response.data.error;
+          if(err.response.status == 401){
+            this.$store.dispatch('disconnect_user');
+            this.$router.push('/');
+          }else{
+            document.getElementById('errorMsg').innerText = 'erreur '+ err.response.status +' : ' + err.response.data.error;
+          }
         });
       }else{
+        this.$store.dispatch('disconnect_user');
         this.$router.push('/');
       }
     }else{
@@ -100,7 +106,12 @@ export default{
         this.listForum = response.data.result;
       })
       .catch(err => {
-        document.getElementById('errorMsg').innerText = 'erreur '+ err.response.status +' : ' + err.response.data.error;
+        if(err.response.status == 401){
+          this.$store.dispatch('disconnect_user');
+          this.$router.push('/');
+        }else{
+          document.getElementById('errorMsg').innerText = 'erreur '+ err.response.status +' : ' + err.response.data.error;
+        }
       });
     }
   },

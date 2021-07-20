@@ -45,7 +45,7 @@
       </div>
 
       <div class="mt-5 d-flex align-items-center flex-column" v-if="modifyMsgId === '' && showDelete === false">
-        
+
         <div id="errorSendMsg" class="text-danger text-center"></div>
 
         <textarea name="commentaire" class="col-10" placeholder="écrit ton commentaire ici !" v-model="newMsg" ></textarea>
@@ -53,7 +53,7 @@
         <img id="preview" class="img-thumbnail" style="max-height:200px;" v-if="selectMedia === 'file' ">
 
         <div class="d-flex flex-column col-10 col-md-7 col-lg-5 col-xl-4" v-if=" selectMedia !== 'gif' ">
-          <input type="file" @change="checkMedia()" @click="selectMedia = 'file' "  v-if="selectMedia !== 'gif' " id="upload" name="file" class="form-control form-control-lg m-1" >
+          <input type="file" @change="checkMedia()" @click="selectMedia= 'file' "  v-if="selectMedia !== 'gif' " id="upload" name="file" class="form-control form-control-lg m-1" >
           <input type="button" value="Choisir un GIF" @click="selectMedia= 'gif' "  v-if="selectMedia !== 'file' " class="form-control form-control-lg m-1">
         </div>
 
@@ -115,9 +115,15 @@ export default {
         this.listMsg = response.data.result;
       })
       .catch(err =>{
-        document.getElementById('errorMsg').innerText = 'erreur '+ err.response.status +' : ' + err.response.data.error;
+        if(err.response.status == 401){
+          this.$store.dispatch('disconnect_user');
+          this.$router.push('/');
+        }else{
+          document.getElementById('errorMsg').innerText = 'erreur '+ err.response.status +' : ' + err.response.data.error;
+        }
       })
       }else{
+        this.$store.dispatch('disconnect_user');
         this.$router.push('/');
       }
     }else{
@@ -127,7 +133,12 @@ export default {
         this.listMsg = response.data.result;
       })
       .catch(err =>{
-        document.getElementById('errorMsg').innerText = 'erreur '+ err.response.status +' : ' + err.response.data.error;
+        if(err.response.status == 401){
+          this.$store.dispatch('disconnect_user');
+          this.$router.push('/');
+        }else{
+          document.getElementById('errorMsg').innerText = 'erreur '+ err.response.status +' : ' + err.response.data.error;
+        }
       })
     }
   },

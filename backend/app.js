@@ -26,7 +26,6 @@ function(err, result) {
   }
 });
 
-
 //headers
 const app = express();
 app.use((req, res, next) => {
