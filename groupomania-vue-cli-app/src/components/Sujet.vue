@@ -39,7 +39,7 @@
           <div class="mx-2 my-4" v-else v-html="msg.message"></div>
 
           <div class="col-12 d-flex justify-content-center">
-            <img v-bind:src=" msg.media" class="img-thumbnail"  style="max-height:200px;">
+            <img v-if="msg.media != null" v-bind:src=" msg.media" class="img-thumbnail" alt="mon image" style="max-height:200px;">
           </div>
         </div>
       </div>
@@ -49,8 +49,8 @@
         <div id="errorSendMsg" class="text-danger text-center"></div>
 
         <textarea name="commentaire" class="col-10" placeholder="écrit ton commentaire ici !" v-model="newMsg" ></textarea>
-        <img class="img-thumbnail" style="height:100px;" v-bind:src="myGIF" v-if="myGIF !== '' ">
-        <img id="preview" class="img-thumbnail" style="max-height:200px;" v-if="selectMedia === 'file' ">
+        <img class="img-thumbnail" alt="mon GIF" style="height:100px;" v-bind:src="myGIF" v-if="myGIF !== '' ">
+        <img id="preview" class="img-thumbnail" alt="mon image" style="max-height:200px;" v-if="selectMedia === 'file' ">
 
         <div class="d-flex flex-column col-10 col-md-7 col-lg-5 col-xl-4" v-if=" selectMedia !== 'gif' ">
           <input type="file" @change="checkMedia()" @click="selectMedia= 'file' "  v-if="selectMedia !== 'gif' " id="upload" name="file" class="form-control form-control-lg m-1" >
@@ -58,14 +58,14 @@
         </div>
 
         <div  class="mt-3" v-if=" selectMedia === 'gif'"> 
-            <input type="text" placeholder="Chercher un GIF" v-model="valueSearchingGIF">
-            <input type="button" @click="searchingGIF()" value="chercher">
+          <input type="text" placeholder="Chercher un GIF" v-model="valueSearchingGIF">
+          <input type="button" @click="searchingGIF()" value="chercher">
         </div>
 
         <input class="mt-2" type="button" value="Poster mon message" @click="createMsg" id="buttonSend">
         
         <div class="d-flex flex-wrap col-12 justify-content-center" >
-          <img  v-for=" gif in gifList" :key="gif.id" v-bind:src="gif.images.original.url" class="m-1 img-thumbnail" style="max-height:300px;" @click="myGIF = gif.images.original.url">
+          <img v-for=" gif in gifList" :key="gif.id" alt="ma recherche de GIF" v-bind:src="gif.images.original.url" class="m-1 img-thumbnail" style="max-height:300px;" @click="myGIF = gif.images.original.url">
         </div>
       
       </div>
@@ -105,23 +105,23 @@ export default {
   created() {
     if(this.tokenStore == ''){
       if(localStorage.getItem('user')){
-      let userStorage = JSON.parse(localStorage.getItem('user'));
-      let positionStorage = JSON.parse(localStorage.getItem('position'));
-      this.$store.dispatch('new_user', userStorage);
-      this.$store.dispatch('select_sujet', positionStorage);
-      HTTP.defaults.headers.common['Authorization'] = `bearer ${this.tokenStore}`;
-      HTTP.get('/messages/'+ this.$route.params.idForum + '/' + this.$route.params.idSujet)
-      .then(response =>{
-        this.listMsg = response.data.result;
-      })
-      .catch(err =>{
-        if(err.response.status == 401){
-          this.$store.dispatch('disconnect_user');
-          this.$router.push('/');
-        }else{
-          document.getElementById('errorMsg').innerText = 'erreur '+ err.response.status +' : ' + err.response.data.error;
-        }
-      })
+        let userStorage = JSON.parse(localStorage.getItem('user'));
+        let positionStorage = JSON.parse(localStorage.getItem('position'));
+        this.$store.dispatch('new_user', userStorage);
+        this.$store.dispatch('select_sujet', positionStorage);
+        HTTP.defaults.headers.common['Authorization'] = `bearer ${this.tokenStore}`;
+        HTTP.get('/messages/'+ this.$route.params.idForum + '/' + this.$route.params.idSujet)
+        .then(response =>{
+          this.listMsg = response.data.result;
+        })
+        .catch(err =>{
+          if(err.response.status == 401){
+            this.$store.dispatch('disconnect_user');
+            this.$router.push('/');
+          }else{
+            document.getElementById('errorMsg').innerText = 'erreur '+ err.response.status +' : ' + err.response.data.error;
+          }
+        })
       }else{
         this.$store.dispatch('disconnect_user');
         this.$router.push('/');
@@ -174,7 +174,7 @@ export default {
       }else { 
         HTTP.post('/messages/'+ this.$route.params.idForum + '/' + this.$route.params.idSujet + '/create', formulaire)
         .then(() =>{
-        this.$router.go({name: 'Sujet', params: {idForum: this.$route.params.idForum, idSujet: this.$route.params.idSujet}});
+          this.$router.go({name: 'Sujet', params: {idForum: this.$route.params.idForum, idSujet: this.$route.params.idSujet}});
         })
         .catch(err =>{
           document.getElementById('buttonSend').disabled = false;
@@ -191,7 +191,7 @@ export default {
       HTTP.defaults.headers.common['Authorization'] = `bearer ${this.tokenStore}`;
       HTTP.put('/messages/'+ this.$route.params.idForum + '/' + this.$route.params.idSujet + '/' +idCreator, formulaire)
       .then(()=>{
-      this.$router.go({name: 'Sujet', params: {idForum: this.$route.params.idForum, idSujet: this.$route.params.idSujet}});
+        this.$router.go({name: 'Sujet', params: {idForum: this.$route.params.idForum, idSujet: this.$route.params.idSujet}});
       })
       .catch(err =>{
         document.getElementById('errorMsg').innerText = 'erreur '+ err.response.status +' : ' + err.response.data.error;
@@ -218,7 +218,7 @@ export default {
         var mediaPreview = new FileReader();
         mediaPreview.readAsDataURL(doc);
         mediaPreview.onload = function(file){
-          document.getElementById('preview').src = file.target.result;
+        document.getElementById('preview').src = file.target.result;
         }
       }else{
         document.getElementById('buttonSend').disabled = true;

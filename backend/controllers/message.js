@@ -65,7 +65,7 @@ exports.createMsg= (req, res) => {
           }
       })
     }else{
-      return res.status(405).json({error: "votre message est vide."});
+      return res.status(400).json({error: "votre message est vide."});
     }
   }
 };
@@ -100,7 +100,7 @@ exports.modifyMyMsg= (req, res) => {
         }
     })
   }else{
-    return res.status(405).json({error: "Votre message est vide"});
+    return res.status(400).json({error: "Votre message est vide"});
   }
 };
 

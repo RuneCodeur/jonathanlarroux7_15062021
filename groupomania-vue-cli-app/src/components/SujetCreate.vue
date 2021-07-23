@@ -19,7 +19,7 @@
         <div id="errorMsg" class="text-danger"></div>
 
         <label for="title" class=""> Titre du sujet: </label>
-        <input type="text" name="title" placeholder="Titre du sujet" class="m-2 col-6" v-model="sujetName">
+        <input type="text" id="title" name="title" placeholder="Titre du sujet" class="m-2 col-6" v-model="sujetName">
         <textarea name="commentaire" class="col-10" placeholder="Mon commentaire ici !" v-model="msg"></textarea>
         </fieldset>
         <input type="button" value="créer un nouveau sujet" id="buttonCreate" class="col-5" @click="sujetCreation">

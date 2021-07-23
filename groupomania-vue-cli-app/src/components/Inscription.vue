@@ -14,15 +14,15 @@
         <fieldset class="text-center">
           <div class="my-2">
             <label for="pseudo" class="col-3 col-md-2"> pseudo: </label>
-            <input type="text" name="pseudo" v-model="pseudo"> 
+            <input type="text" id="pseudo" name="pseudo" v-model="pseudo"> 
           </div>
           <div class="my-2">
             <label for="mail" class="col-3 col-md-2"> adresse mail: </label>
-            <input type="mail" name="mail" v-model="mail">
+            <input type="email" id="mail" name="mail" v-model="mail">
           </div>
           <div class="my-2">
             <label for="password" class="col-3 col-md-2"> mot de passe: </label>
-            <input type="password" name="password" v-model="mdp">
+            <input type="password" id="password" name="password" v-model="mdp">
           </div>
 
           <div id="errorMsg" class="text-danger"></div>
@@ -39,7 +39,7 @@
 import { HTTP } from '../http-constants'
 import { mapState } from 'vuex'
 import { mapActions } from 'vuex'
-let regexPseudo = new RegExp ('^([a-zA-Z-_0-9]){3,20}$')
+let regexPseudo = new RegExp ('^([a-zA-Z-0-9_-]){3,20}$')
 let regexMail = new RegExp ('^[A-Za-z-_0-9.]+@([A-Za-z-_0-9-]+.)+[A-Za-z]$')
 let regexMdp = new RegExp ('^.{5,}$')
 export default{

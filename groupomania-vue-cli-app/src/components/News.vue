@@ -26,7 +26,7 @@
           </div>
           <div class="mx-2" v-html="msg.message"></div>
           <div class="col-12 d-flex justify-content-center">
-            <img v-bind:src=" msg.media" class="img-thumbnail" style="max-height:200px;">
+            <img v-if="msg.media != null" v-bind:src="msg.media" alt="image" class="img-thumbnail" style="max-height:200px;">
           </div>
         </div>
         

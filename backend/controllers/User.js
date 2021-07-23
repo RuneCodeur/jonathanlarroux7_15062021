@@ -1,7 +1,7 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const connection = require('../connect');
-let regex = new RegExp('^([a-zA-Z0-9]){3,20}$');
+let regex = new RegExp('^([a-zA-Z0-9_-]){3,20}$');
 let mailRegex = new RegExp("^[A-Za-z-_0-9.]+@([A-Za-z-_0-9-]+.)+[A-Za-z]$");
 let regexMdp = new RegExp ('^.{5,}$');
 

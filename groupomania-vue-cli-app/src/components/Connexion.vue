@@ -13,11 +13,11 @@
         <fieldset>
           <div class="my-2">
             <label for="mail" class="col-3 col-md-2">adresse mail: </label>
-            <input type="mail" name="mail" v-model="mail">
+            <input type="email" id="mail" name="mail" v-model="mail">
           </div>
           <div class="my-2">
             <label for="password" class="col-3 col-md-2">mot de passe: </label>
-            <input type="password" name="password" v-model="mdp">
+            <input type="password" id="password" name="password" v-model="mdp">
           </div>
           <div id="errorMsg" class="text-danger"></div>
           <input type="button" value="je me connecte" class="my-4" @click="connection()" id="connect-button">

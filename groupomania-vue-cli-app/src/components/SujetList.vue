@@ -15,12 +15,13 @@
         <div class="col-8 border"> Nom du sujet </div>
         <div class="col-4 border"> Auteur du sujet </div>
       </div>
+      
       <div class="my-1 d-flex row col-12" v-for="sujet in listSujet" :key="sujet.id">
         <div @click="goToSujet(sujet.id, sujet.nom_sujet, sujet.pseudo_creator)" class="btn btn-secondary d-flex row col-11 m-0 p-0">
           <div class="col-8 border d-flex flex-column justify-content-around p-3"> {{ sujet.nom_sujet }} </div>
           <div class="col-4 border d-flex flex-column justify-content-around p-3" v-if="sujet.pseudo_creator != null"> {{ sujet.pseudo_creator }} </div> 
           <div class="col-4 border d-flex flex-column justify-content-around p-3" v-if="sujet.pseudo_creator == null"> Utilisateur supprimé </div>
-      </div>
+        </div>
 
           <div class="col-1 d-flex flex-column p-0 fs-6 justify-content-around" v-if="sujet.id_creator === idStore || statusStore == 1">
             <i class="fas fa-cog btn-warning py-2" v-show="showModif && !showChangeNameSujet && !showDeleteSujet" @click="showChangeNameSujet = !showChangeNameSujet; idChangeSujet= sujet.id, nameChangeSujet=sujet.nom_sujet, idCreator=sujet.id_creator"></i>
@@ -38,7 +39,7 @@
       <form method="post">
         <fieldset class="text-center my-4 flex-column align-items-center" v-show="showChangeNameSujet">
           <label for="title" class=""> Titre du sujet: </label>
-          <input type="text" name="title" placeholder="titre du forum" class="m-2 col-8" v-model="nameChangeSujet">
+          <input type="text" id="title" name="title" placeholder="titre du forum" class="m-2 col-8" v-model="nameChangeSujet">
           <input type="button" value="modifier" id="buttonModify" class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1" @click="modifySujet()" >
         </fieldset>
       </form>

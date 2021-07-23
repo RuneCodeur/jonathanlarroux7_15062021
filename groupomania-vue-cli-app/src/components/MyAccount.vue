@@ -28,7 +28,7 @@
         <form method="post" v-show="!showPseudo">
           <fieldset class="my-4 border">
               <label for="pseudo" class="mx-3"> Nouveau pseudo: </label> 
-            <input type="text" name="pseudo" v-model="newPseudo">
+            <input type="text" id="pseudo" name="pseudo" v-model="newPseudo">
             <input type="button" id="buttonModif" value="Je change de pseudo" class="m-3" @click="modifyAccount()">
           </fieldset>
         </form>
